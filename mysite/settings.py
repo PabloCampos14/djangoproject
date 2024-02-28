@@ -76,15 +76,8 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 
 DATABASES = { #pruebapython
     'default': {
-        'ENGINE': 'sql_server.pyodbc',
-        'NAME': BASE_DIR / 'db.sqlite3',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': 'gsvvmcontpaq\contpaq2022',
-        'PORT': '',
-        'OPTIONS': {
-            'driver': 'ODBC Driver 13 for SQL server'
-        }
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3'
     }
 }
 
