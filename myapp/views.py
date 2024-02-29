@@ -1,29 +1,24 @@
 from django.shortcuts import render
 from django.http import HttpResponse 
 from django.template import Template, Context
+from .forms import ReclasificadorForm
 
 # Create your views here.
 def hello (request):
-    doc_externo = open("C:/Users/SistemasGSV/Desktop/djangoproject/myapp/Plantillas/misplantillas.html")
-    plt = Template(doc_externo.read()) #Se deben importar Template y context
+    #creación de una instancia del formulario ReclasificadorForm
+    form = ReclasificadorForm(request.POST or None)
 
-    doc_externo.close
+    #Logica para procesar el formulario cuando se envia 
+    if request.method == 'POST' and form.is_valid():
+        #Obtiene elementos seleccionados de los campos del formulario
+        elementos_izquierda = form.cleaned_data['elementos_izquierda']
+        elementos_derecha = form.cleaned_data['elementos_derecha']
 
-    cxt = Context()
-
-    documento = plt.render(cxt)
-
-    return HttpResponse(documento)
+    #NOTA: Falta la lógica para mover elementos entre listas o cualquier otra acción
+    
+    return render(request, 'misplantillas.html', {'form': form})
 
 def prueba (request):
-    doc_externo_prueba = open("C:/Users/SistemasGSV/Desktop/djangoproject/myapp/Plantillas/index.html")
-    plt_prueba = Template(doc_externo_prueba.read()) #Se deben importar Template y context
-
-    doc_externo_prueba.close
-
-    cxt_prueba = Context()
-
-    documento_prueba = plt_prueba.render(cxt_prueba)
-
-    return HttpResponse(documento_prueba)
+    #Temporalmente vacío en lo que se me ocurre que poner en esta extensión xd
+    return render(request, 'index.html')
 
