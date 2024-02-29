@@ -14,7 +14,10 @@ def hello (request):
         elementos_izquierda = form.cleaned_data['elementos_izquierda']
         elementos_derecha = form.cleaned_data['elementos_derecha']
 
+    
     #NOTA: Falta la lógica para mover elementos entre listas o cualquier otra acción
+    #ADEMÁS agregar la base de datos para comenzar las pruebas en SQL server
+        
     
     return render(request, 'misplantillas.html', {'form': form})
 

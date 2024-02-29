@@ -75,12 +75,19 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+#ENGINE: mssql Name: String nombre de la base de datos
+#HOST: String instancia de sql - Conexión/Servidor
+#PORT: Puerto de instancia - Cadena vacia '' Puerto default
+#USER: String - Usuario de la base de datos
+#PASSWORD: Contraseña del usuario
+#TOKEN: Cadena. Token de acceso obtenido como usuario o entidad de servicio que tiene acceso a la base de datos. P.ej. cuando se usa azure.identity, se puede pasar el resultado de DefaultAzureCredential().get_token('https://database.windows.net/.default').
 
-DATABASES = { #pruebapython
+DATABASES = { # https://pypi.org/project/mssql-django/
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3'
-    }
+        'ENGINE': 'django.db.backends.sqlite3', #Engine: mssql Name: String nombre de la base de datos
+        'NAME': BASE_DIR / 'db.sqlite3'         
+    }                                           
+                                                
 }
 
 
