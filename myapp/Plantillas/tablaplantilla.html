@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Reclasificador</title>
+
+  <!-- Enlace a los estilos de Bootstrap -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="p-3 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3">
+        <h1 style="animation: reverse; animation-duration: 4s; text-align: center;">Reclasificador</h1>
+    </div>
+    <hr class="divider" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <p>
+        Prueba de los datos que se pondran aquí
+    </p>
+
+    <!-- ... (código anterior) -->
+
+<div class="container mt-5">
+  <h2>Datos de la Tabla zClasifProveedores</h2>
+  <table class="table">
+      <thead>
+          <tr>
+              {% for campo in nombreCampo %}
+                  <th>{{ campo }}</th>
+              {% endfor %}
+          </tr>
+      </thead>
+      <tbody>
+          {% for clasificacion in zClasificaciones %}
+              <tr>
+                  <td>{{ clasificacion.id_Clasif }}</td>
+                  <td>{{ clasificacion.Descripcion }}</td>
+              </tr>
+          {% endfor %}
+      </tbody>
+  </table>
+</div>
+
+<!-- ... (resto del código) -->
+
+
+    <!-- Resto del código HTML... -->
+
+    <!-- Enlaces a los scripts de Bootstrap y jQuery -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <!-- script personalizado para manejar los movimientos y actualizaciones -->
+    <script>
+        $(document).ready(function() {
+            // código JavaScript para manejar los movimientos y actualizaciones
+        });
+    </script>
+
+</body>
+</html>

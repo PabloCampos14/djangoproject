@@ -82,14 +82,23 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 #'HOST': 'localhost'
 #'PORT': ''
 #'OPTIONS': {'driver': 'ODBC Driver 17 for SQL Server'}
+#212031126
+#HECP011014
 
 
 #TOKEN: Cadena. Token de acceso obtenido como usuario o entidad de servicio que tiene acceso a la base de datos. P.ej. cuando se usa azure.identity, se puede pasar el resultado de DefaultAzureCredential().get_token('https://database.windows.net/.default').
 
 DATABASES = { # https://pypi.org/project/mssql-django/
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3', #Engine: mssql Name: String nombre de la base de datos
-        'NAME': BASE_DIR / 'db.sqlite3'         
+        'ENGINE': 'mssql', #Engine: mssql Name: String nombre de la base de datos
+        'NAME': 'Pruebas3',
+        'HOST': 'gsvwdb17\sql2014',
+        'PORT': '',
+        'USER': 'gsvreportes',
+        'PASSWORD': 'Ind2019&',
+        'OPTIONS': {
+            'driver': 'ODBC Driver 17 for SQL Server'
+        }        
     }                                           
                                                 
 }
