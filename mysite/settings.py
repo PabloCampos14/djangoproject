@@ -90,15 +90,9 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 
 DATABASES = { # https://pypi.org/project/mssql-django/
     'default': {
-        'ENGINE': 'mssql', #Engine: mssql Name: String nombre de la base de datos
-        'NAME': 'Pruebas3',
-        'HOST': 'gsvwdb17\sql2014',
-        'PORT': '',
-        'USER': 'gsvreportes',
-        'PASSWORD': 'Ind2019&',
-        'OPTIONS': {
-            'driver': 'ODBC Driver 17 for SQL Server'
-        }        
+        'ENGINE': 'django.db.backends.sqlite3', #Engine: mssql Name: String nombre de la base de datos
+        'NAME': os.path.join('db.sqlite3')
+                
     }                                           
                                                 
 }

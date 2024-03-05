@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>
+        Conexión SQL Server desde Django
+    </title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+</head>
+<body><center>
+
+    <h1>Prueba de la conexión a la base de datos </h1>
+    <h2>Tabla base de datos </h2>
+    <hr/>
+    <table border="3">
+        <tr>
+            <th> Clasificación Id </th>
+           <!--  <th> Descripción </th> -->
+            <th>Descripción </th>
+        </tr>
+        {% for datadisplay in clasf_Proveedor_Tabla %}
+        <tr>
+            <td> {{datadisplay.id_Clasif}} </td>
+            <td> {{datadisplay.Descripcion}} </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <button  onclick="location.href='http://127.0.0.1:8000'" type="submit" class="btn btn-success">Home
+</button>
+<!-- https://www.youtube.com/watch?v=QcCISY-OOeU -->
+</center></body>
+

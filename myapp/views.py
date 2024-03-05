@@ -23,52 +23,27 @@ def hello (request):
     
     return render(request, 'misplantillas.html', {'form': form})
 
-def pizarron(request):
-    #configuración de la base de datos
-    server = "gsvwdb17\sql2014"
-    db = "Pruebas3"
-    user = "gsvreportes"
-    password = "Ind2019&"
-
-    #Se intenta realizar la conexión con la base de datos
-    
-    try:
-        #Construcción de la cadena de conexión
-        connection_string = "DRIVER = {SQL Server};SERVER ="+server+";DATABASE="+db+";UID="+ user+ ";PWD="+password
-        #edoConexion= True
-        conn = pyodbc.connect(connection_string)
-
-        #creación de cursor
-        cursor = conn.cursor()
-
-        #Consulta a la tabla de la base de datos
-        #sql_query = "SELECT * FROM dbo.zClasifProveedores"
-        sql_query = "SELECT * FROM dbo.zClasifProveedores"
-
-        #Ejecución de consulta
-        cursor.execute(sql_query)
-
-        # Obtener nombres de campos
-        #nombres_campos = [column[0] for column in cursor.description]
-        nombres_campos = [column[0] for column in cursor.description]
-
-
-        # Obtener valores de la consulta
-        #valores = cursor.fetchall()
-        valores = cursor.fetchall()
-
-        cursor.close()
-        conn.close()
-        #return render(request, "misplantillas.html", {"edoconect": True, "clasificaciones": valores, "nombreCampo": nombres_campos})
-
-        return render(request, "tablaplantilla.html", {"edoconect": True, "clasificaciones": valores, "nombreCampo": nombres_campos})
-
-    except Exception as e:
-
-        return render(request, "tablaplantilla.html", {"edoconect": False, "error_message": str(e)})
+def tabla(request):
+    conn = pyodbc.connect('Driver={sql server};'
+                      'Server=gsvwdb17\sql2014;'
+                      'Database=Pruebas3;'
+                      'UID=gsvreportes;'
+                      'PWD=Ind2019&;'
+                      'Trusted_Connection=no;')
+    cursor = conn.cursor()
+    cursor.execute("select top 5 * from zClasifProveedores")
+    result = cursor.fetchall()
+    return render(request, 'Tabla.html', {'clasf_Proveedor_Tabla': result})
 
 def prueba (request):
     #Temporalmente vacío en lo que se me ocurre que poner en esta extensión xd
     #Me equivoqué la tabla de la base de datos se llama dbo.zClasifProveedores
+    #Haz un código de broma de hackeo donde pregunta si quiero hackear facebook y si contesto que si se ejecute metodo hackeofb
+    #Es solo de broma no es algo verdadero y no son funciones verdaderas, es algo como
+    #if (Quieres hackear fb? = si):
+    #hackeo()
+    #En lugar de print que sea un metodo o función como hackeo()
+     
     return render(request, 'index.html')
+
 
