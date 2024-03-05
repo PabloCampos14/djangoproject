@@ -14,16 +14,16 @@
     <h1>Prueba de la conexión a la base de datos </h1>
     <h2>Tabla base de datos </h2>
     <hr/>
-    <table border="3">
+    <table border="1"  style="height: 100px;">
         <tr>
-            <th> Clasificación Id </th>
+            <th class="align-middle"> Clasificación Id </th>
            <!--  <th> Descripción </th> -->
-            <th>Descripción </th>
+            <th class="align-middle">Descripción </th>
         </tr>
         {% for datadisplay in clasf_Proveedor_Tabla %}
         <tr>
-            <td> {{datadisplay.id_Clasif}} </td>
-            <td> {{datadisplay.Descripcion}} </td>
+            <td class="align-text-top"> {{datadisplay.id_Clasif}} </td>
+            <td class="align-text-top"> {{datadisplay.Descripcion}} </td>
         </tr>
         {% endfor %}
     </table>

@@ -18,6 +18,7 @@
     <p>
         Prueba de los datos que se pondran aqui
     </p>
+    
 
 <div class="container mt-5">
   <div class="row">
@@ -28,6 +29,19 @@
           <li lcass="list-group-item">{{ elemento }}</li>
         {% endfor %}
       </ul>
+      <table border="1"  style="height: 100px;">
+        <tr>
+            <th class="align-middle"> Clasificación Id </th>
+           <!--  <th> Descripción </th> -->
+            <th class="align-middle">Descripción </th>
+        </tr>
+        {% for datadisplay in clasf_Proveedor_Tabla %}
+        <tr>
+            <td class="align-text-top"> {{datadisplay.id_Clasif}} </td>
+            <td class="align-text-top"> {{datadisplay.Descripcion}} </td>
+        </tr>
+        {% endfor %}
+    </table>
     </div>
     
     <div class="col-md-2 text-center mt-4">
@@ -35,25 +49,61 @@
         {% csrf_token %}
         {{ form.elementos_izquierda }}
         <br>
-        <button type="submit" class="btn btn-primary mb-2" name="moverDerecha">Mover a la Derecha</button>
+        <button type="submit" class="btn btn-primary mb-2" name="moverDerecha"> 🡪 </button>
         <br>
-        <button type="submit" class="btn btn-primary mb-2" name="moverIzquierda">Mover a la Izquierda</button>
+        <button type="submit" class="btn btn-primary mb-2" name="moverIzquierda"> 🡨 </button>
       </form>
       <br>
-      <button type="submit" class="btn btn-success" name="actualizarCambios">Actualizar Cambios</button>
+      
+      <button type="submit" class="btn btn-success" name="actualizarCambios">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-repeat" viewBox="0 0 16 16">
+          <path d="M11 5.466V4H5a4 4 0 0 0-3.584 5.777.5.5 0 1 1-.896.446A5 5 0 0 1 5 3h6V1.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192m3.81.086a.5.5 0 0 1 .67.225A5 5 0 0 1 11 13H5v1.466a.25.25 0 0 1-.41.192l-2.36-1.966a.25.25 0 0 1 0-.384l2.36-1.966a.25.25 0 0 1 .41.192V12h6a4 4 0 0 0 3.585-5.777.5.5 0 0 1 .225-.67Z"/>
+        </svg>
+        Update 
+      </button>
+      
       <br>
-      <button onclick="location.href='http://127.0.0.1:8000/prueba/'">Botón prueba </button>
-      <button onclick="location.href='http://127.0.0.1:8000/tabla/'">Botón prueba </button>
+      <!--   <button onclick="location.href='http://127.0.0.1:8000/prueba/'">Botón prueba </button> -->
+      <!-- <button onclick="location.href='http://127.0.0.1:8000/tabla/'">Botón prueba </button> -->
+
+      <div class="btn-group btn-group-toggle" data-toggle="buttons">
+        <label class="btn btn-secondary active" onclick="location.href='http://127.0.0.1:8000/prueba/'">
+          <input type="radio" name="options" id="option1" autocomplete="off" onclick="location.href='http://127.0.0.1:8000/prueba/'"  checked> Active
+        </label>
+        <label class="btn btn-secondary" onclick="location.href='http://127.0.0.1:8000/tabla/'">
+          <input type="radio" name="options" id="option2" autocomplete="off" onclick="location.href='http://127.0.0.1:8000/tabla/'"> Radio
+        </label>
+      </div>
 
     </div>
     
     <div class="col-md-5">
+      <!-- The second value will be selected initially -->
+<select name="select">
+  <option value="value1">Value 1</option>
+  <option value="value2" selected>Value 2</option>
+  <option value="value3">Value 3</option>
+</select>
+
       <h4>Tabla Derecha</h4>
       <ul id="listaDerecha" class="list-group">
         {% for elemento in form.elementos_derecha %}
           <li class="list-group-item">{{ elemento }}</li>
         {% endfor %}
       </ul>
+      <table border="1"  style="height: 100px;">
+        <tr>
+            <th class="align-middle"> Clasificación Id </th>
+           <!--  <th> Descripción </th> -->
+            <th class="align-middle">Descripción </th>
+        </tr>
+        {% for datadisplay in clasf_Proveedor_Tabla %}
+        <tr>
+            <td class="align-text-top"> {{datadisplay.id_Clasif}} </td>
+            <td class="align-text-top"> {{datadisplay.Descripcion}} </td>
+        </tr>
+        {% endfor %}
+    </table>
     </div>
   </div>
 </div>

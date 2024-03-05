@@ -10,6 +10,16 @@ def hello (request):
     #creación de una instancia del formulario ReclasificadorForm
     form = ReclasificadorForm(request.POST or None)
 
+    conn = pyodbc.connect('Driver={sql server};'
+                      'Server=gsvwdb17\sql2014;'
+                      'Database=Pruebas3;'
+                      'UID=gsvreportes;'
+                      'PWD=Ind2019&;'
+                      'Trusted_Connection=no;')
+    cursor = conn.cursor()
+    cursor.execute("select * from zClasifProveedores")
+    result = cursor.fetchall()
+
     #Logica para procesar el formulario cuando se envia 
     if request.method == 'POST' and form.is_valid():
         #Obtiene elementos seleccionados de los campos del formulario
@@ -21,7 +31,7 @@ def hello (request):
     #ADEMÁS agregar la base de datos para comenzar las pruebas en SQL server
         
     
-    return render(request, 'misplantillas.html', {'form': form})
+    return render(request, 'misplantillas.html', {'clasf_Proveedor_Tabla': result})
 
 def tabla(request):
     conn = pyodbc.connect('Driver={sql server};'
@@ -31,9 +41,11 @@ def tabla(request):
                       'PWD=Ind2019&;'
                       'Trusted_Connection=no;')
     cursor = conn.cursor()
-    cursor.execute("select top 5 * from zClasifProveedores")
+    cursor.execute("select * from zClasifProveedores")
     result = cursor.fetchall()
     return render(request, 'Tabla.html', {'clasf_Proveedor_Tabla': result})
+#ORM https://stackoverflow.com/questions/372885/how-do-i-connect-to-a-mysql-database-in-python/622308#622308
+
 
 def prueba (request):
     #Temporalmente vacío en lo que se me ocurre que poner en esta extensión xd
