@@ -73,13 +73,12 @@
             <label for="proveedores">Selecciona un proveedor:</label>
             <select id="proveedores" name="proveedores" class="form-select mb-4">
                 {% for datadisplay in clasf_Proveedor_Tabla %}
-                    <option value="{{ datadisplay.id }}">{{ datadisplay.Descripcion }}</option>
+                    <option value="{{ datadisplay.id }}">{{ datadisplay.id_Clasif }}</option>
                 {% endfor %}
             </select>
 
             <!-- Contenedor de la lista con estilos personalizados -->
-            <!-- -->
-            <div class="list-container" multiple>
+            <div class="list-container">
                 {% for datadisplay in clasf_Proveedor_Tabla %}
                     <div class="list-item" data-id="{{ datadisplay.id }}">
                         <h5>{{ datadisplay.Descripcion }}</h5>
@@ -121,48 +120,12 @@
     </div>
 
     <script>
-    // Agrega un evento de carga del documento
-    document.addEventListener('DOMContentLoaded', function() {
-        var selectElement = document.getElementById('proveedores');
-        var listItems = document.querySelectorAll('.list-item');
-        var updateButton = document.querySelector('[name="actualizarCambios"]');
-
-        // Agrega un evento de clic al botón Update
-        updateButton.addEventListener('click', function(event) {
-            // Evita que el formulario se envíe
-            event.preventDefault();
-
-            // Obtén el valor seleccionado en el combobox
-            var selectedValue = selectElement.value;
-
-            // Muestra solo los elementos cuyo data-id coincide con el valor seleccionado en el combobox
-            listItems.forEach(function(item) {
-                if (item.getAttribute('data-id') === selectedValue || selectedValue === "") {
-                    item.style.display = 'block';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-
-            // Elimina la clase 'active' de todos los elementos
-            listItems.forEach(function(innerItem) {
-                innerItem.classList.remove('active');
-            });
-
-            // Agrega la clase 'active' al primer elemento que coincide con el valor seleccionado
-            var selectedElement = document.querySelector('.list-item[data-id="' + selectedValue + '"]');
-            if (selectedElement) {
-                selectedElement.classList.add('active');
-            }
-        });
-
         // Agrega un evento de clic a cada elemento de la lista
-        listItems.forEach(function(item) {
-            item.addEventListener('click', function(event) {
-                // Si la tecla Ctrl/Cmd está presionada, permite la selección múltiple
-                if (event.ctrlKey || event.metaKey) {
-                    item.classList.toggle('active');
-                } else {
+        document.addEventListener('DOMContentLoaded', function() {
+            var listItems = document.querySelectorAll('.list-item');
+
+            listItems.forEach(function(item) {
+                item.addEventListener('click', function() {
                     // Elimina la clase 'active' de todos los elementos
                     listItems.forEach(function(innerItem) {
                         innerItem.classList.remove('active');
@@ -170,13 +133,10 @@
 
                     // Agrega la clase 'active' solo al elemento clicado
                     item.classList.add('active');
-                }
+                });
             });
         });
-    });
-</script>
+    </script>
 
-       
-    
 </body>
 </html>

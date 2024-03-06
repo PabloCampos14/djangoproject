@@ -9,6 +9,15 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body>
+
+  <div class="topnav">
+    <a class="active" href="#home" onclick="location.href='http://127.0.0.1:8000'"> Home </a>
+    <a href="#news" onclick="location.href='http://127.0.0.1:8000/prueba'"> Prueba </a>
+    <a href="#contact" onclick="location.href='http://127.0.0.1:8000/tabla'"> Tabla </a>
+    <a href="#about">About</a>
+  </div>
+
+
     <div class="p-3 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3">
         <h1 style="animation: reverse; animation-duration: 4s; text-align: center;">Reclasificador</h1>
       </div>
@@ -29,7 +38,7 @@
           <li lcass="list-group-item">{{ elemento }}</li>
         {% endfor %}
       </ul>
-      <table border="1"  style="height: 100px;">
+      <table border="1"  style="height: 100px;" class="table table-dark table-striped">
         <tr>
             <th class="align-middle"> Clasificación Id </th>
            <!--  <th> Descripción </th> -->
@@ -64,7 +73,7 @@
       
       <br>
       <!--   <button onclick="location.href='http://127.0.0.1:8000/prueba/'">Botón prueba </button> -->
-      <!-- <button onclick="location.href='http://127.0.0.1:8000/tabla/'">Botón prueba </button> -->
+      <!-- <button onclick="location.href='http://127.0.0.1:8000/tabla/'">Botón prueba </button>  -->
 
       <div class="btn-group btn-group-toggle" data-toggle="buttons">
         <label class="btn btn-secondary active" onclick="location.href='http://127.0.0.1:8000/prueba/'">
@@ -91,7 +100,7 @@
           <li class="list-group-item">{{ elemento }}</li>
         {% endfor %}
       </ul>
-      <table border="1"  style="height: 100px;">
+      <table border="1"  style="height: 100px;" class="table table-dark table-striped">
         <tr>
             <th class="align-middle"> Clasificación Id </th>
            <!--  <th> Descripción </th> -->
@@ -117,6 +126,7 @@
 <script>
   $(document).ready(function() {
     // código JavaScript para manejar los movimientos y actualizaciones
+     
   });
 
   
