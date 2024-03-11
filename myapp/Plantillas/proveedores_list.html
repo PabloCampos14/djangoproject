@@ -6,9 +6,29 @@
   <title>Proveedores</title>
 
   <!-- Enlace a los estilos de Bootstrap -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" crossorigin="anonymous"
+  href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+  <style>
+    /* Estilos adicionales para hacer la tabla más pequeña y manejable */
+    table {
+        max-width: 80%;
+        margin: auto;
+    }
+
+    th,
+    td {
+        max-width: 100px; /* O cualquier otro valor que desees */
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+</style>
 </head>
 <body>
+    <div> 
+
+    
+    <a class="btn btn-primary" href="addProv">Agregar Nuevo Proveedor</a>
     <table class="table">
         <thead>
             <tr>
@@ -47,6 +67,8 @@
                 <th scope="col">Contacto</th>
                 <th scope="col">Prod serv</th>
                 <th scope="col">Portal Multiple</th>
+                <th scope="col">Id Clasifi</th>
+                <th scope="col">Descripción</th>
             </tr>
         </thead>
         <tbody>
@@ -87,10 +109,18 @@
                     <td>{{ proveedor.contacto}}</td>
                     <td>{{ proveedor.prod_serv}}</td>
                     <td>{{ proveedor.portal_multiple}}</td>
+                    <td> {{proveedor.id_clasif}} </td>
+                    <td> {{proveedor.Descripcion}} </td>
+                    <td> <a href="updateprov/{{proveedor.id_proveedor}}"> Edit </a> </td>
+                    <td> <a href="deleteprov/{{proveedor.id_proveedor}}"> Delete </a> </td>
                 </tr>
             {% endfor %}
+            
         </tbody>
+
     </table>
+    {% include "paginacion.html" %}
+    </div>    
 
 </body>
 </html>
