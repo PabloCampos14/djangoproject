@@ -1,87 +1,10 @@
 #myapp/forms.py
 from django import forms
-'''
-class ReclasificadorForm(forms.Form):
-    #campo de los elementos de la izquierda para poder seleccionar varios
-    elementos_izquierda= forms.MultipleChoiceField(widget=forms.SelectMultiple, required=False)
-
-    #campo de los elementos de la izquierda para poder seleccionar varios 
-    elementos_derecha = forms.MultipleChoiceField(widget=forms.SelectMultiple, required=False)
-    
-    from django import forms
-
-class ProveedorForm(forms.Form):
-    id_proveedor = forms.IntegerField()
-    num_proveedor = forms.CharField(max_length=20)
-    nombre_proveedor = forms.CharField(max_length=100)
-    razon_social = forms.CharField(max_length=100, required=False)
-    modulo_origen = forms.CharField(max_length=5)
-    idprov_ref = forms.IntegerField(required=False)
-    status_prov = forms.CharField(max_length=1, required=False)
-    fecha_status = forms.DateTimeField(required=False)
-    id_ingreso = forms.CharField(max_length=8, required=False)
-    fecha_ingreso = forms.DateTimeField(required=False)
-    observaciones = forms.CharField(max_length=255, required=False)
-    descto_prontopago = forms.CharField(max_length=1, required=False)
-    diascredito = forms.IntegerField(required=False)
-    id_concepto = forms.IntegerField(required=False)
-    cuenta = forms.CharField(max_length=10, required=False)
-    subcuenta = forms.CharField(max_length=10, required=False)
-    auxiliar1 = forms.CharField(max_length=10, required=False)
-    direccion = forms.CharField(max_length=100, required=False)
-    rfc = forms.CharField(max_length=20, required=False)
-    tipo_beneficiario = forms.CharField(max_length=1, required=False)
-    no_clabe = forms.CharField(max_length=20, required=False)
-    tipo = forms.CharField(max_length=1)
-    id_compania = forms.IntegerField()
-    tipo_proveedor = forms.CharField(max_length=2, required=False)
-    view_diot = forms.CharField(max_length=1, required=False)
-    calficacion = forms.IntegerField(required=False)
-    proveedor_logo = forms.ImageField(required=False)
-    id_ProvBco = forms.IntegerField(required=False)
-    revisado = forms.BooleanField(required=False)
-    id_area = forms.IntegerField()
-    aplica_eval = forms.BooleanField()
-    critico = forms.BooleanField()
-    contacto = forms.CharField(max_length=200, required=False)
-    prod_serv = forms.CharField(max_length=200, required=False)
-    portal_multiple = forms.BooleanField()
-
-
-    '''
+#
 class ProvForm(forms.Form):
     id_proveedor = forms.IntegerField()
     num_proveedor = forms.CharField(max_length=20)
     nombre_proveedor = forms.CharField(max_length=100)
-    razon_social = forms.CharField(max_length=100, required=False)
-    modulo_origen = forms.CharField(max_length=5)
-    idprov_ref = forms.IntegerField(required=False)
-    status_prov = forms.CharField(max_length=1, required=False)
-    fecha_status = forms.DateTimeField(required=False)
-    id_ingreso = forms.CharField(max_length=8, required=False)
-    fecha_ingreso = forms.DateTimeField(required=False)
-    observaciones = forms.CharField(max_length=255, required=False)
-    descto_prontopago = forms.CharField(max_length=1, required=False)
-    diascredito = forms.IntegerField(required=False)
-    id_concepto = forms.IntegerField(required=False)
-    cuenta = forms.CharField(max_length=10, required=False)
-    subcuenta = forms.CharField(max_length=10, required=False)
-    auxiliar1 = forms.CharField(max_length=10, required=False)
-    direccion = forms.CharField(max_length=100, required=False)
-    rfc = forms.CharField(max_length=20, required=False)
-    tipo_beneficiario = forms.CharField(max_length=1, required=False)
+    #
     no_clabe = forms.CharField(max_length=20, required=False)
-    tipo = forms.CharField(max_length=1)
-    id_compania = forms.IntegerField()
-    tipo_proveedor = forms.CharField(max_length=2, required=False)
-    view_diot = forms.CharField(max_length=1, required=False)
-    calficacion = forms.IntegerField(required=False)
-    proveedor_logo = forms.ImageField(required=False)
-    id_ProvBco = forms.IntegerField(required=False)
-    revisado = forms.BooleanField(required=False)
-    id_area = forms.IntegerField()
-    aplica_eval = forms.BooleanField()
-    critico = forms.BooleanField()
-    contacto = forms.CharField(max_length=200, required=False)
-    prod_serv = forms.CharField(max_length=200, required=False)
-    portal_multiple = forms.BooleanField()
+#

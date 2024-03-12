@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>Proveedores</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
   <!-- Enlace a los estilos de Bootstrap -->
   <link rel="stylesheet" crossorigin="anonymous"
@@ -11,7 +12,7 @@
   <style>
     /* Estilos adicionales para hacer la tabla más pequeña y manejable */
     table {
-        max-width: 80%;
+        max-width: 100%;
         margin: auto;
     }
 
@@ -30,45 +31,12 @@
     
     <a class="btn btn-primary" href="addProv">Agregar Nuevo Proveedor</a>
     <table class="table">
-        <thead>
+        <thead class="thead-dark">
             <tr>
                 <th scope="col">ID Proveedor</th>
                 <th scope="col">Número Proveedor</th>
                 <th scope="col">Nombre Proveedor</th>
-                <th scope="col">Razón Social</th>
-                <th scope="col">Modulo Origen</th>
-                <th scope="col">IDprov_ref</th>
-                <th scope="col">Status Proveedor</th>
-                <th scope="col">Status Fecha</th>
-                <th scope="col">ID Ingreso</th>
-                <th scope="col">Fecha Ingreso</th>
-                <th scope="col">Observaciones</th>
-                <th scope="col">Descuento ProntoPago</th>
-                <th scope="col">Días credito</th>
-                <th scope="col">ID Concepto</th>
-                <th scope="col">Cuenta</th>
-                <th scope="col">SubCuenta</th>
-                <th scope="col">Auxiliar 1</th>
-                <th scope="col">Dirección</th>
-                <th scope="col">RFC</th>
-                <th scope="col">Tipo Beneficiario</th>
                 <th scope="col">Num Clabe</th>
-                <th scope="col">Tipo</th>
-                <th scope="col">ID Compañia</th>
-                <th scope="col">Tipo Proveedor</th>
-                <th scope="col">view diot</th>
-                <th scope="col">Calificación</th>
-                <th scope="col">Proveedor Logo</th>
-                <th scope="col">ID ProvBco</th>
-                <th scope="col">Revisado</th>
-                <th scope="col">ID Area</th>
-                <th scope="col">Aplica Eval</th>
-                <th scope="col">Critico</th>
-                <th scope="col">Contacto</th>
-                <th scope="col">Prod serv</th>
-                <th scope="col">Portal Multiple</th>
-                <th scope="col">Id Clasifi</th>
-                <th scope="col">Descripción</th>
             </tr>
         </thead>
         <tbody>
@@ -77,42 +45,9 @@
                     <td>{{ proveedor.id_proveedor }}</td>
                     <td>{{ proveedor.num_proveedor }}</td>
                     <td>{{ proveedor.nombre_proveedor }}</td>
-                    <td>{{ proveedor.razon_social }}</td>
-                    <td>{{ proveedor.modulo_origen }}</td>
-                    <td>{{ proveedor.idprov_ref }}</td>
-                    <td>{{ proveedor.status_prov }}</td>
-                    <td>{{ proveedor.fecha_status }}</td>
-                    <td>{{ proveedor.id_ingreso }}</td>
-                    <td>{{ proveedor.fecha_ingreso }}</td>
-                    <td>{{ proveedor.observaciones }}</td>
-                    <td>{{ proveedor.descto_prontopago }}</td>
-                    <td>{{ proveedor.diascredito }}</td>
-                    <td>{{ proveedor.id_concepto }}</td>
-                    <td>{{ proveedor.cuenta }}</td>
-                    <td>{{ proveedor.subcuenta }}</td>
-                    <td>{{ proveedor.auxiliar1 }}</td>
-                    <td>{{ proveedor.direccion }}</td>
-                    <td>{{ proveedor.rfc }}</td>
-                    <td>{{ proveedor.tipo_beneficiario }}</td>
                     <td>{{ proveedor.no_clabe }}</td>
-                    <td>{{ proveedor.tipo }}</td>
-                    <td>{{ proveedor.id_compania }}</td>
-                    <td>{{ proveedor.tipo_proveedor }}</td>
-                    <td>{{ proveedor.view_diot }}</td>
-                    <td>{{ proveedor.calficacion }}</td>
-                    <td>{{ proveedor.proveedor_logo }}</td>
-                    <td>{{ proveedor.id_ProvBco }}</td>
-                    <td>{{ proveedor.revisado }}</td>
-                    <td>{{ proveedor.id_area}}</td>
-                    <td>{{ proveedor.aplica_eval}}</td>
-                    <td>{{ proveedor.critico}}</td>
-                    <td>{{ proveedor.contacto}}</td>
-                    <td>{{ proveedor.prod_serv}}</td>
-                    <td>{{ proveedor.portal_multiple}}</td>
-                    <td> {{proveedor.id_clasif}} </td>
-                    <td> {{proveedor.Descripcion}} </td>
-                    <td> <a href="updateprov/{{proveedor.id_proveedor}}"> Edit </a> </td>
-                    <td> <a href="deleteprov/{{proveedor.id_proveedor}}"> Delete </a> </td>
+                    <td> <a href="updateprov/{{proveedor.id_proveedor}}" class="btn btn-success"> Edit </a> </td>
+                    <td> <a href="deleteprov/{{proveedor.id_proveedor}}" class="btn btn-danger"> Delete </a> </td>
                 </tr>
             {% endfor %}
             

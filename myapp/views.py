@@ -1,5 +1,5 @@
 from django.http import Http404
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 #from django.http import HttpResponse
 #from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 #from django.urls import reverse
@@ -44,49 +44,17 @@ def get_proveedores_list(request):
                           'Trusted_Connection=no;')
     
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM cxp_proveedor")
+    cursor.execute("SELECT id_proveedor, num_proveedor, nombre_proveedor,no_clabe FROM cxp_proveedor")
     #cursor.execute("Select p.no_clabe, p.id_proveedor, p.num_proveedor, p.nombre_proveedor, c.* from cxp_proveedor p left join zClasifProv c on p.no_clabe = c.id_clasif_prov ")
 
 
     for row in cursor.fetchall():
         proveedores_list.append({
-            "id_proveedor": row[0],
-            "num_proveedor": row[1],
-            "nombre_proveedor": row[2],
-            "razon_social": row[3],
-            "modulo_origen": row[4],
-            "idprov_ref": row[5],
-            "status_prov": row[6],
-            "fecha_status": row[7],
-            "id_ingreso": row[8],
-            "fecha_ingreso": row[9],
-            "observaciones": row[10],
-            "descto_prontopago": row[11],
-            "diascredito": row[12],
-            "id_concepto": row[13],
-            "cuenta": row[14],
-            "subcuenta": row[15],
-            "auxiliar1": row[16],
-            "direccion": row[17],
-            "rfc": row[18],
-            "tipo_beneficiario": row[19],
-            "no_clabe": row[20],
-            "tipo": row[21],
-            "id_compania": row[22],
-            "tipo_proveedor": row[23],
-            "view_diot": row[24],
-            "calficacion": row[25],
-            "proveedor_logo": row[26],
-            "id_ProvBco": row[27],
-            "revisado": row[28],
-            "id_area": row[29],
-            "aplica_eval": row[30],
-            "critico": row[31],
-            "contacto": row[32],
-            "prod_serv": row[33],
-            "portal_multiple": row[34]#,
-            #"id_clasif": row[35],
-            #"descripcion_clasif": row[36]
+            "id_proveedor": row[0], #
+            "num_proveedor": row[1], #
+            "nombre_proveedor": row[2],#
+            "no_clabe": row[3]#,  Campo clabe unico editable
+            
         })
     #paginator = Paginator(proveedores_list, 3)
     #pagina = request.Get.get("page") or 1
@@ -124,7 +92,6 @@ def addProv(request):
         return render(request, 'addProv.html', {'proveedores':{}})
     
 def updateprov(request, id_proveedor):
-    pv = []
     conn = pyodbc.connect('Driver={sql server};'
                           'Server=gsvwdb17\sql2014;'
                           'Database=Pruebas3;'
@@ -132,12 +99,27 @@ def updateprov(request, id_proveedor):
                           'PWD=Ind2019&;'
                           'Trusted_Connection=no;')
     cursor = conn.cursor()
-    if request.method == 'GET':
-        cursor.execute("SELECT * FROM dbo.cxp_proveedor WHERE id_proveedor = ?", id_proveedor)
-        for row in cursor.fetchall():
-            pv.append({"id_proveedor": row[0], "num_proveedor": row[1], "nombre_proveedor": row[2], "razon_social": row[3], "modulo_origen": row[4]})
-        conn.close()
-        return render (request, "addProv.html", {'proveedor':pv[0]})
+    cursor.execute("SELECT * FROM dbo.cxp_proveedor WHERE id_proveedor = ?", id_proveedor)
+    row = cursor.fetchone()
+    if row:
+        provider = {
+            
+            'no_clabe': row[3]
+            
+            # add other fields here
+        }
+    else:
+        raise Http404("Proveedor not found")
+
+    if request.method == 'POST':
+        no_clabe = request.POST['no_clabe']
+        cursor.execute("UPDATE dbo.cxp_proveedor SET no_clabe = ? WHERE id_proveedor = ?", no_clabe, id_proveedor)
+        conn.commit()
+        return redirect('get_proveedores_list')
+    else:
+        return render(request, 'updateprov.html', {'provider': provider})
+    '''
+    En la plantilla donde se muestra la tabla todo bien. y al dar al botón de "Edit" me manda a la plantilla para poder hacer la actualización de campo, ingreso en nuevo valor y al darle "submit" no pasa nada, no se guarda el nuevo valor
     if request.method == 'POST':
         form = ProvForm(request)
         if form.is_valid():
@@ -150,6 +132,7 @@ def updateprov(request, id_proveedor):
             conn.commit()
         conn.close()
         return redirect('get_proveedores_list')
+    '''
     
 def deleteprov(request, id_proveedor ):
     conn = pyodbc.connect('Driver={sql server};'

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr">
 <head>
-    <title>Detalles Proveedor</title>
+    <title>Update Provider</title>
     
     <link rel="stylesheet" crossorigin="anonymous"
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" >
@@ -13,15 +13,14 @@
 </head>
 
 <body>
-    <h2>Detalles Proveedor</h2>
+    <h2>Update Provider</h2>
 
-    <form action="{% url 'update_prov' id_proveedor=provider.id %}" method="POST">
-        {% csrf_token %}
+    <form action="" method = "POST">{% csrf_token %}
         <div class="form-group row">
-          <label for="id_proveedor">no_clabe</label>
+          <label for="no_clabe">CLABE Number:</label>
           <input type="text" class="form-control" name="no_clabe" id="no_clabe" value="{{ provider.no_clabe }}">
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">Update</button>
         <a href="{% url 'get_proveedores_list' %}" class="btn btn-primary">Cancel</a>
       </form>
 </body>
