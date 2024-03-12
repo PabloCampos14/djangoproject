@@ -44,7 +44,7 @@ def get_proveedores_list(request):
                           'Trusted_Connection=no;')
     
     cursor = conn.cursor()
-    cursor.execute("SELECT id_proveedor, num_proveedor, nombre_proveedor,no_clabe FROM cxp_proveedor")
+    cursor.execute("SELECT id_proveedor, num_proveedor, nombre_proveedor,no_clabe, Descripcion FROM cxp_proveedor")
     #cursor.execute("Select p.no_clabe, p.id_proveedor, p.num_proveedor, p.nombre_proveedor, c.* from cxp_proveedor p left join zClasifProv c on p.no_clabe = c.id_clasif_prov ")
 
 
@@ -53,7 +53,8 @@ def get_proveedores_list(request):
             "id_proveedor": row[0], #
             "num_proveedor": row[1], #
             "nombre_proveedor": row[2],#
-            "no_clabe": row[3]#,  Campo clabe unico editable
+            "no_clabe": row[3],
+            "Descripcion": row[4] #,  Campo clabe unico editable
             
         })
     #paginator = Paginator(proveedores_list, 3)
@@ -103,17 +104,34 @@ def updateprov(request, id_proveedor):
     row = cursor.fetchone()
     if row:
         provider = {
-            
-            'no_clabe': row[3]
-            
-            # add other fields here
+            'id_proveedor': row[0],
+            'no_clabe': row[3],
         }
     else:
         raise Http404("Proveedor not found")
 
     if request.method == 'POST':
         no_clabe = request.POST['no_clabe']
-        cursor.execute("UPDATE dbo.cxp_proveedor SET no_clabe = ? WHERE id_proveedor = ?", no_clabe, id_proveedor)
+        description = {
+            0: 'Refacciones',
+            1: 'Largo plazo',
+            2: 'Diesel',
+            3: 'Llantas',
+            4: 'InterCompañias',
+            5: 'Administracion',
+            6: 'Operacion',
+            7: 'Permisioarios',
+            8: 'Otros',
+            9: 'CortoPlazo',
+            10: 'LargoPlazoAnt',
+            11: 'Diesel Ant',
+            12: 'EPP',
+            13: 'Infra',
+            14: 'Limpieza',
+            15: 'Seguridad',
+            16: 'Uniformes',
+        }.get(int(no_clabe), 'Unknown')
+        cursor.execute("UPDATE dbo.cxp_proveedor SET no_clabe = ?, Descripcion = ? WHERE id_proveedor = ?", no_clabe, description, id_proveedor)
         conn.commit()
         return redirect('get_proveedores_list')
     else:

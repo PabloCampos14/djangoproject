@@ -20,6 +20,10 @@
           <label for="no_clabe">CLABE Number:</label>
           <input type="text" class="form-control" name="no_clabe" id="no_clabe" value="{{ provider.no_clabe }}">
         </div>
+        <div class="form-group row">
+          <label for="description">Description:</label>
+          <input type="text" class="form-control" name="description" id="description" value="{{ provider.description }}" readonly>
+        </div>
         <button type="submit" class="btn btn-primary">Update</button>
         <a href="{% url 'get_proveedores_list' %}" class="btn btn-primary">Cancel</a>
       </form>
