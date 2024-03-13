@@ -24,14 +24,28 @@
         white-space: nowrap;
     }
 </style>
-<nav class="navbar navbar-light bg-light">
+<!--<nav class="navbar navbar-light bg-light">
     <form class="form-inline">
       <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
       <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
     </form>
-  </nav>
+  </nav> --> 
+
+  <nav class="navbar navbar-light bg-light">
+    <a class="navbar-brand" href="http://127.0.0.1:8000/">
+        <img src="https://www.gruposantanavega.com/img/logo_ft_002.png" width="150" height="60" class="d-inline-block align-top" alt="">
+        <span class="display-4">Inicio</span>
+    </a>
+</nav>
+
+
+  <form method="get" action="{% url 'get_proveedores_list' %}" class="form-inline">
+    <input type="text" name="search_query" value="{{ search_query|default_if_none:'' }}" placeholder="Buscar..." class="form-control mr-sm-2">
+    <button type="submit" class="btn btn-outline-success my-2 my-sm-0">Buscar</button>
+</form>
 </head>
 <body>
+
     <div> 
 
     

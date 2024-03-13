@@ -8,7 +8,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 #from .models import clasf_Proveedor_Tabla
 from .forms import ProvForm
 from django.apps import apps
-from django.core.paginator import Paginator
+#from django.core.paginator import Paginator
 import pyodbc
 # ss
 def prueba (request):
@@ -33,6 +33,7 @@ def connected():
 
 
 def get_proveedores_list(request):
+    search_query = request.GET.get('search_query', None)
     proveedores_list = []
     
     # Tu cadena de conexión aquí
@@ -44,7 +45,11 @@ def get_proveedores_list(request):
                           'Trusted_Connection=no;')
     
     cursor = conn.cursor()
-    cursor.execute("SELECT id_proveedor, num_proveedor, nombre_proveedor,no_clabe, Descripcion FROM cxp_proveedor")
+    #cursor.execute("SELECT id_proveedor, num_proveedor, nombre_proveedor,no_clabe, Descripcion FROM cxp_proveedor") #EL BUENO
+    if search_query:
+        cursor.execute("SELECT id_proveedor, num_proveedor, nombre_proveedor,no_clabe, Descripcion FROM cxp_proveedor WHERE nombre_proveedor LIKE ? OR num_proveedor LIKE ?", ('%' + search_query + '%', '%' + search_query + '%',))
+    else:
+        cursor.execute("SELECT id_proveedor, num_proveedor, nombre_proveedor,no_clabe, Descripcion FROM cxp_proveedor")
     #cursor.execute("Select p.no_clabe, p.id_proveedor, p.num_proveedor, p.nombre_proveedor, c.* from cxp_proveedor p left join zClasifProv c on p.no_clabe = c.id_clasif_prov ")
 
 
@@ -57,14 +62,13 @@ def get_proveedores_list(request):
             "Descripcion": row[4] #,  Campo clabe unico editable
             
         })
-    #paginator = Paginator(proveedores_list, 3)
-    #pagina = request.Get.get("page") or 1
-    #posts = paginator.get_page(pagina)
-    #pagina_actual = int(pagina)
-    #paginas = range(1, posts.paginator.num_pages + 1)
     cursor.close()
     conn.close()
-    return render (request, 'proveedores_list.html', {'proveedores_list':proveedores_list})
+    #return render(request, 'proveedores_list.html', {'proveedores_list': proveedores_list, 'id_proveedor': id_proveedor, 'num_proveedor': num_proveedor, 'nombre_proveedor': nombre_proveedor, 'no_clabe': no_clabe})
+    return render (request, 'proveedores_list.html', {'proveedores_list':proveedores_list, 'search_query': search_query})
+    #return render (request, 'proveedores_list.html', {'proveedores_list':proveedores_list}) #EL BUENO
+
+
 
 def addProv(request):
     if request.method == 'GET':
