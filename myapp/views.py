@@ -1,16 +1,11 @@
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render, redirect
-#from django.http import HttpResponse
-#from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-#from django.urls import reverse
-#from django.contrib import messages
-#from django.contrib.messages.views import SuccessMessageMixin
-#from .models import clasf_Proveedor_Tabla
 from .forms import ProvForm
 from django.apps import apps
 #from django.core.paginator import Paginator
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 import pyodbc
-# ss
 def prueba (request):
     
      
@@ -31,7 +26,6 @@ def connected():
     conn.close()
     return result
 
-
 def get_proveedores_list(request):
     search_query = request.GET.get('search_query', None)
     proveedores_list = []
@@ -45,31 +39,94 @@ def get_proveedores_list(request):
                           'Trusted_Connection=no;')
     
     cursor = conn.cursor()
-    #cursor.execute("SELECT id_proveedor, num_proveedor, nombre_proveedor,no_clabe, Descripcion FROM cxp_proveedor") #EL BUENO
+    
     if search_query:
-        cursor.execute("SELECT id_proveedor, num_proveedor, nombre_proveedor,no_clabe, Descripcion FROM cxp_proveedor WHERE nombre_proveedor LIKE ? OR num_proveedor LIKE ?", ('%' + search_query + '%', '%' + search_query + '%',))
+        cursor.execute("""
+            SELECT p.id_proveedor, p.num_proveedor, p.nombre_proveedor, p.no_clabe, c.Descripcion
+            FROM cxp_proveedor p
+            LEFT JOIN zClasifProveedores c ON p.no_clabe = c.id_Clasif
+            WHERE p.nombre_proveedor LIKE ? OR p.num_proveedor LIKE ? OR c.Descripcion LIKE ?
+        """, ('%' + search_query + '%', '%' + search_query + '%', '%' + search_query + '%'))
     else:
-        cursor.execute("SELECT id_proveedor, num_proveedor, nombre_proveedor,no_clabe, Descripcion FROM cxp_proveedor")
-    #cursor.execute("Select p.no_clabe, p.id_proveedor, p.num_proveedor, p.nombre_proveedor, c.* from cxp_proveedor p left join zClasifProv c on p.no_clabe = c.id_clasif_prov ")
-
+        cursor.execute("""
+            SELECT p.id_proveedor, p.num_proveedor, p.nombre_proveedor, p.no_clabe, c.Descripcion
+            FROM cxp_proveedor p
+            LEFT JOIN zClasifProveedores c ON p.no_clabe = c.id_Clasif
+        """)
 
     for row in cursor.fetchall():
         proveedores_list.append({
-            "id_proveedor": row[0], #
-            "num_proveedor": row[1], #
-            "nombre_proveedor": row[2],#
+            "id_proveedor": row[0],
+            "num_proveedor": row[1],
+            "nombre_proveedor": row[2],
             "no_clabe": row[3],
-            "Descripcion": row[4] #,  Campo clabe unico editable
-            
+            "Descripcion": row[4]
         })
     cursor.close()
     conn.close()
-    #return render(request, 'proveedores_list.html', {'proveedores_list': proveedores_list, 'id_proveedor': id_proveedor, 'num_proveedor': num_proveedor, 'nombre_proveedor': nombre_proveedor, 'no_clabe': no_clabe})
-    return render (request, 'proveedores_list.html', {'proveedores_list':proveedores_list, 'search_query': search_query})
+    
+    paginator = Paginator(proveedores_list, 11)  # 10 elementos por página
+
+    page = request.GET.get('page')
+    try:
+        proveedores = paginator.page(page)
+    except PageNotAnInteger:
+        proveedores = paginator.page(1)
+    except EmptyPage:
+        proveedores = paginator.page(paginator.num_pages)
+
+    return render(request, 'proveedores_list.html', {'search_query': search_query, 'proveedores': proveedores})
+
+
+
+
+'''
+def get_proveedores_list(request):
+    search_query = request.GET.get('search_query', None)
+    proveedores_list = []
+    
+    # Tu cadena de conexión aquí
+    conn = pyodbc.connect('Driver={sql server};'
+                          'Server=gsvwdb17\sql2014;'
+                          'Database=Pruebas3;'
+                          'UID=gsvreportes;'
+                          'PWD=Ind2019&;'
+                          'Trusted_Connection=no;')
+    
+    cursor = conn.cursor()
+    
+    if search_query:
+        cursor.execute("SELECT id_proveedor, num_proveedor, nombre_proveedor,no_clabe, Descripcion FROM cxp_proveedor WHERE nombre_proveedor LIKE ? OR num_proveedor LIKE ? OR Descripcion LIKE ?", ('%' + search_query + '%', '%' + search_query + '%', '%' + search_query + '%',))
+        #cursor.execute("SELECT p.id_proveedor, p.num_proveedor, p.nombre_proveedor, p.no_clabe, c.Descripcion FROM cxp_proveedor p JOIN zClasifProveedores c ON p.no_clabe = c.id_Clasif WHERE p.nombre_proveedor LIKE ? OR p.num_proveedor LIKE ? OR c.Descripcion LIKE ?", ('%' + search_query + '%', '%' + search_query + '%', '%' + search_query + '%',))
+
+    else:
+        cursor.execute("SELECT id_proveedor, num_proveedor, nombre_proveedor,no_clabe, Descripcion FROM cxp_proveedor")
+
+    for row in cursor.fetchall():
+        proveedores_list.append({
+            "id_proveedor": row[0],
+            "num_proveedor": row[1],
+            "nombre_proveedor": row[2],
+            "no_clabe": row[3],
+            "Descripcion": row[4]
+        })
+    cursor.close()
+    conn.close()
+    
+    paginator = Paginator(proveedores_list, 11)  # 10 elementos por página
+
+    page = request.GET.get('page')
+    try:
+        proveedores = paginator.page(page)
+    except PageNotAnInteger:
+        proveedores = paginator.page(1)
+    except EmptyPage:
+        proveedores = paginator.page(paginator.num_pages)
+
+    return render(request, 'proveedores_list.html', {'search_query': search_query, 'proveedores': proveedores})
+'''
     #return render (request, 'proveedores_list.html', {'proveedores_list':proveedores_list}) #EL BUENO
-
-
-
+#Ya ni se usa xd
 def addProv(request):
     if request.method == 'GET':
         return render(request, 'addProv.html')
@@ -104,11 +161,55 @@ def updateprov(request, id_proveedor):
                           'PWD=Ind2019&;'
                           'Trusted_Connection=no;')
     cursor = conn.cursor()
+    
+    # Obtener los datos del proveedor
+    cursor.execute("SELECT id_proveedor, nombre_proveedor, no_clabe FROM dbo.cxp_proveedor WHERE id_proveedor = ?", id_proveedor)
+    row = cursor.fetchone()
+    
+    if row:
+        provider = {
+            'id_proveedor': row[0],
+            'nombre_proveedor': row[1],
+            'no_clabe': row[2],
+        }
+    else:
+        raise Http404("Proveedor not found")
+    
+    # Obtener la descripción del proveedor desde la tabla zClasifProveedores
+    cursor.execute("SELECT Descripcion FROM zClasifProveedores WHERE id_Clasif = ?", provider['no_clabe'])
+    row = cursor.fetchone()
+    if row:
+        descripcion = row[0]
+    else:
+        descripcion = 'Unknown'  # En caso de que no se encuentre una descripción
+    
+    if request.method == 'POST':
+        # Actualizar la columna no_clabe con los datos del formulario
+        no_clabe = request.POST['no_clabe']
+        cursor.execute("UPDATE dbo.cxp_proveedor SET no_clabe = ? WHERE id_proveedor = ?", no_clabe, id_proveedor)
+        conn.commit()
+        
+        return redirect('get_proveedores_list')
+    else:
+        return render(request, 'updateprov.html', {'provider': provider, 'descripcion': descripcion})
+
+
+'''    
+def updateprov(request, id_proveedor):
+    conn = pyodbc.connect('Driver={sql server};'
+                          'Server=gsvwdb17\sql2014;'
+                          'Database=Pruebas3;'
+                          'UID=gsvreportes;'
+                          'PWD=Ind2019&;'
+                          'Trusted_Connection=no;')
+    cursor = conn.cursor()
     cursor.execute("SELECT * FROM dbo.cxp_proveedor WHERE id_proveedor = ?", id_proveedor)
+
     row = cursor.fetchone()
     if row:
         provider = {
             'id_proveedor': row[0],
+            'nombre_proveedor': row[2],
             'no_clabe': row[3],
         }
     else:
@@ -137,25 +238,12 @@ def updateprov(request, id_proveedor):
         }.get(int(no_clabe), 'Unknown')
         cursor.execute("UPDATE dbo.cxp_proveedor SET no_clabe = ?, Descripcion = ? WHERE id_proveedor = ?", no_clabe, description, id_proveedor)
         conn.commit()
+        
         return redirect('get_proveedores_list')
     else:
+        
         return render(request, 'updateprov.html', {'provider': provider})
-    '''
-    En la plantilla donde se muestra la tabla todo bien. y al dar al botón de "Edit" me manda a la plantilla para poder hacer la actualización de campo, ingreso en nuevo valor y al darle "submit" no pasa nada, no se guarda el nuevo valor
-    if request.method == 'POST':
-        form = ProvForm(request)
-        if form.is_valid():
-            num_proveedor = str(form.cleaned_data.get("num_proveedor"))
-            nombre_proveedor = str(form.cleaned_data.get("nombre_proveedor"))
-            razon_social = str(form.cleaned_data.get("razon_social"))
-            modulo_origen = str(form.cleaned_data.get("modulo_origen"))
-            cursor.execute("UPDATE dbo.cxp_proveedor SET num_proveedor = ?, nombre_proveedor = ?, razon_social= ?, modulo_origen = ?", 
-                           num_proveedor, nombre_proveedor, razon_social, modulo_origen)
-            conn.commit()
-        conn.close()
-        return redirect('get_proveedores_list')
-    '''
-    
+'''        
 def deleteprov(request, id_proveedor ):
     conn = pyodbc.connect('Driver={sql server};'
                           'Server=gsvwdb17\sql2014;'

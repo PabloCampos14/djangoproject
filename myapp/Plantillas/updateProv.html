@@ -15,7 +15,12 @@
 </head>
 
 <body>
-    <h2>Update Provider</h2>
+    <h2>Update Proveedor</h2>
+    <div class="form-group row">
+      <label for="nombre_proveedor">Nombre del proveedor:</label>
+      <input type="text" class="form-control" name="nombre_proveedor" id="nombre_proveedor" value="{{ provider.nombre_proveedor }}" readonly>
+  </div>
+  
 
     <form action="" method = "POST">{% csrf_token %}
         <div class="form-group row">
@@ -41,11 +46,11 @@
           </select>
           
         </div>
-        <div class="form-group row">
+       <!--<div class="form-group row">
           <label for="description">Description:</label>
           <input type="text" class="form-control" name="description" id="description" value="{{ provider.description }}" readonly>
          
-        </div>
+        </div> --> 
         <button type="submit" class="btn btn-primary">Update</button>
         <a href="{% url 'get_proveedores_list' %}" class="btn btn-primary">Cancel</a>
       </form>
