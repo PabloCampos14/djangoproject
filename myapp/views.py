@@ -40,13 +40,20 @@ def get_proveedores_list(request):
     
     cursor = conn.cursor()
     
-    if search_query:
+    if search_query and search_query.lower() != "none":
         cursor.execute("""
             SELECT p.id_proveedor, p.num_proveedor, p.nombre_proveedor, p.no_clabe, c.Descripcion
             FROM cxp_proveedor p
             LEFT JOIN zClasifProveedores c ON p.no_clabe = c.id_Clasif
-            WHERE p.nombre_proveedor LIKE ? OR p.num_proveedor LIKE ? OR c.Descripcion LIKE ?
-        """, ('%' + search_query + '%', '%' + search_query + '%', '%' + search_query + '%'))
+            WHERE p.nombre_proveedor LIKE ? OR p.num_proveedor LIKE ? OR c.Descripcion LIKE ? OR p.no_clabe LIKE ?
+        """, ('%' + search_query + '%', '%' + search_query + '%', '%' + search_query + '%', '%' + search_query + '%'))
+    elif search_query and search_query.lower() == "none":
+        cursor.execute("""
+            SELECT p.id_proveedor, p.num_proveedor, p.nombre_proveedor, p.no_clabe, c.Descripcion
+            FROM cxp_proveedor p
+            LEFT JOIN zClasifProveedores c ON p.no_clabe = c.id_Clasif
+            WHERE p.no_clabe IS NULL OR p.no_clabe = ''
+        """)
     else:
         cursor.execute("""
             SELECT p.id_proveedor, p.num_proveedor, p.nombre_proveedor, p.no_clabe, c.Descripcion
@@ -65,7 +72,7 @@ def get_proveedores_list(request):
     cursor.close()
     conn.close()
     
-    paginator = Paginator(proveedores_list, 11)  # 10 elementos por página
+    paginator = Paginator(proveedores_list, 21)  # 10 elementos por página
 
     page = request.GET.get('page')
     try:
