@@ -5,52 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="theme-color" content="#319197">
     <title>Proveedores</title>
-    <link rel="shortcut icon" href="#">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="icon" href="../static/favicon.ico">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
   
     <!-- Estilos adicionales -->
     <style>
+      /* Estilos para la barra lateral */
+      .sidebar {
+        height: 100%;
+        width: 250px; /* Ancho inicial de la barra lateral */
+        position: fixed;
+        top: 0;
+        left: -250px; /* La barra lateral se oculta inicialmente */
+        background-color: #fa996c; /* Color de fondo de la barra lateral */
+        transition: left 0.3s; /* Transición suave para la animación de desplazamiento */
+        padding-top: 20px; /* Espacio superior */
+      }
+  
+      /* Contenido principal */
+      .main-content {
+        margin-left: 0; /* Margen izquierdo ajustado para que el contenido principal ocupe todo el ancho */
+        padding: 20px;
+        transition: margin-left 0.3s; /* Transición suave para la animación de desplazamiento */
+        width: calc(100% - 250px); /* Ajusta el ancho del contenido principal para dejar espacio para la barra lateral */
+        margin-left: 250px; /* Ajusta el margen izquierdo para desplazar el contenido principal junto con la barra lateral */
+      }
+  
       /* Estilos para el botón de alternar barra lateral */
-.toggle-btn {
-  position: absolute;
-  left: 0;
-  top: 20px;
-  cursor: pointer;
-  transition: left 0.3s;
-  z-index: 1;
-}
-
-/* Estilos para la barra lateral cuando la página se carga inicialmente */
-.initial-toggle {
-  left: 250px;
-}
-
-/* Estilos para la barra lateral */
-.sidebar {
-  height: 100%;
-  width: 250px;
-  position: fixed;
-  top: 0;
-  left: -250px;
-  background-color: #e84a25;
-  transition: left 0.3s;
-  padding-top: 20px;
-}
-
-/* Contenido principal */
-.main-content {
-  margin-left: 0;
-  padding: 20px;
-  transition: margin-left 0.3s;
-  width: calc(100% - 250px);
-  margin-left: 250px;
-}
-
-
-
+      .toggle-btn {
+        position: absolute;
+        left: 250px; /* Coloca el botón a la derecha de la barra lateral */
+        top: 20px;
+        cursor: pointer;
+      }
 
       /* Estilo para la tabla */
       table {
@@ -64,25 +51,25 @@
         <!-- Aquí puedes colocar enlaces, menús, o cualquier contenido que desees en la barra lateral -->
         <h2>Menú</h2>
         <ul>
-          <li><a href="http://127.0.0.1:8000/trafico-liquidacion/">Trafico</a></li>
+          <li><a href="#">Opción 1</a></li>
           <li><a href="#">Opción 2</a></li>
           <li><a href="#">Opción 3</a></li>
         </ul>
       </div>
     <div class="main-content" id="main-content">
       <!-- Contenido principal aquí -->
-      <nav class="navbar navbar-light bg-light" style="margin-left: 80px;">
+      <nav class="navbar navbar-light bg-light">
         <a class="navbar-brand" href="http://127.0.0.1:8000/">
             <img src="https://www.gruposantanavega.com/img/logo_ft_002.png" width="150" height="60" class="d-inline-block align-top" alt="">
             <span class="display-4">Reclasificador</span>
         </a>
     </nav>
     
-    <form method="get" action="{% url 'get_proveedores_list' %}" class="form-inline" style="margin-left: 80px;">
+    
+      <form method="get" action="{% url 'get_proveedores_list' %}" class="form-inline">
         <input type="text" name="search_query" value="{{ search_query|default_if_none:'' }}" placeholder="Buscar..." class="form-control mr-sm-2">
         <button type="submit" class="btn btn-outline-success my-2 my-sm-0">Buscar</button>
     </form>
-    
       <table class="table table-striped">
         <thead class="thead-dark">
             <tr>
@@ -140,35 +127,24 @@
     </div>        
 
     <!-- Botón para alternar la visibilidad de la barra lateral -->
-    <div class="toggle-btn initial-toggle" onclick="toggleSidebar()">
-        <i class="fas fa-bars fa-lg"></i>
-    </div>
-    
+    <div class="toggle-btn" onclick="toggleSidebar()">☰</div>
 
     <!-- Script para controlar el comportamiento de la barra lateral -->
-<!-- Script para controlar el comportamiento de la barra lateral -->
-<script>
-    function toggleSidebar() {
-      var sidebar = document.getElementById("sidebar");
-      var mainContent = document.getElementById("main-content");
-      var toggleBtn = document.querySelector(".toggle-btn");
-      
-      // Obtiene el valor actual de la propiedad left de la barra lateral
-      var sidebarLeft = window.getComputedStyle(sidebar).getPropertyValue("left");
-      
-      if (sidebarLeft === "-250px") {
-        sidebar.style.left = "0";
-        mainContent.style.marginLeft = "250px";
-        mainContent.style.width = "calc(100% - 250px)";
-        toggleBtn.style.left = "230px"; // Ajusta la posición del botón
-      } else {
-        sidebar.style.left = "-250px";
-        mainContent.style.marginLeft = "0";
-        mainContent.style.width = "100%";
-        toggleBtn.style.left = "30px"; // Ajusta la posición del botón
+    <script>
+      function toggleSidebar() {
+        var sidebar = document.getElementById("sidebar");
+        var mainContent = document.getElementById("main-content");
+        
+        if (sidebar.style.left === "-250px") {
+          sidebar.style.left = "0";
+          mainContent.style.marginLeft = "250px";
+          mainContent.style.width = "calc(100% - 250px)";
+        } else {
+          sidebar.style.left = "-250px";
+          mainContent.style.marginLeft = "0";
+          mainContent.style.width = "100%";
+        }
       }
-    }
-  </script>
-  
+    </script>
 </body>
 </html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Fecha de Liquidación</title>
+    <link rel="shortcut icon" href="#">
+    <!-- Importa los estilos de Bootstrap -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Importa los estilos del widget de calendario -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-light bg-light" style="margin-left: 80px;">
+        <a class="navbar-brand" href="http://127.0.0.1:8000/trafico-liquidacion/">
+            <img src="https://www.gruposantanavega.com/img/logo_ft_002.png" width="150" height="60" class="d-inline-block align-top" alt="">
+            <span class="display-4">Regresar</span>
+        </a>
+    </nav>
+    <h1>Editar Fecha de Liquidación</h1>
+    
+    <!-- Script para mostrar mensaje de error en ventana emergente -->
+    {% if mensaje_error %}
+    <script>
+        // Mostrar mensaje de error en una ventana emergente
+        alert("{{ mensaje_error }}");
+    </script>
+    {% endif %}
+
+    <form id="editarFechaForm" method="post" onsubmit="return validarFecha()">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="id_fecha_liquidacion">Fecha de Liquidación:</label>
+            {{ form.fecha_liquidacion }}
+        </div>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+    </form>
+    
+    <!-- Importa los scripts de Bootstrap y del widget de calendario -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <!-- Inicializa el widget de calendario -->
+    <script>
+        $(document).ready(function() {
+            $('.datepicker').datepicker({
+                format: 'yyyy-mm-dd',
+                autoclose: true,
+                todayHighlight: true
+            });
+        });
+
+        function validarFecha() {
+            // Obtener el valor de la fecha ingresada
+            var nuevaFechaStr = document.getElementById("id_fecha_liquidacion").value;
+            var nuevaFecha = new Date(nuevaFechaStr);
+            var fechaActual = new Date();
+
+            // Validar la fecha
+            if (nuevaFecha > fechaActual) {
+                alert("La fecha no puede ser en el futuro.");
+                return false; // Evita que se envíe el formulario
+            } else if (nuevaFecha.getFullYear() < fechaActual.getFullYear()) {
+                alert("La fecha no puede ser de años pasados.");
+                return false; // Evita que se envíe el formulario
+            }
+
+            // Preguntar al usuario si está seguro de guardar los cambios
+            if (confirm("¿Está seguro de guardar los cambios?")) {
+                return true; // Se envía el formulario si se confirma
+            } else {
+                return false; // Evita que se envíe el formulario si se cancela
+            }
+        }
+    </script>
+</body>
+</html>
+

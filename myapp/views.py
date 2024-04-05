@@ -1,9 +1,18 @@
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render, redirect
 from .forms import ProvForm
+from django.http import Http404
 from django.apps import apps
 #from django.core.paginator import Paginator
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib.auth.models import User
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
+from django.utils.translation import activate
+from .forms import EditarFechaForm
+from django.utils import timezone
+from datetime import datetime
 
 import pyodbc
 
@@ -22,6 +31,7 @@ def connected():
     conn.close()
     return result
 
+#@login_required(login_url='/accounts/acceder')
 def get_proveedores_list(request):
     search_query = request.GET.get('search_query', None)
     proveedores_list = []
@@ -68,7 +78,7 @@ def get_proveedores_list(request):
     cursor.close()
     conn.close()
     
-    paginator = Paginator(proveedores_list, 21)  # 21 elementos por página - Como se empieza desde cero xd
+    paginator = Paginator(proveedores_list, 21)  # 21 elementos mostrados por paginaaaaaa
 
     page = request.GET.get('page')
     try:
@@ -123,6 +133,162 @@ def updateprov(request, id_proveedor):
         return redirect('get_proveedores_list')
     else:
         return render(request, 'updateprov.html', {'provider': provider, 'descripcion': descripcion})
+    
+'''
+def login_view(request):
+    if request.method == 'POST':
+        id_usuario = request.POST.get('id_usuario')
+        password = request.POST.get('password')
+
+        # Realiza la conexión a la base de datos
+        conn = pyodbc.connect('Driver={SQL Server};'
+                              'Server=gsvwdb17\sql2014;'
+                              'Database=Pruebas3;'
+                              'UID=gsvreportes;'
+                              'PWD=Ind2019&;'
+                              'Trusted_Connection=no;')
+        
+        cursor = conn.cursor()
+
+        # Realiza la consulta para validar las credenciales del usuario
+        cursor.execute("SELECT * FROM dbo.seguridad_usuarios WHERE id_usuario = ? AND password = ?", (id_usuario, password))
+        user = cursor.fetchone()
+
+        if user:
+            # Autenticación exitosa, redirige al usuario a la página deseada
+            return redirect('get_proveedores_list')
+        else:
+            # Autenticación fallida
+            return render(request, 'login.html', {'error_message': 'Invalid credentials'})
+    else:
+        # Renderiza el formulario de inicio de sesión
+        return render(request, 'login.html')
+'''
+
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.shortcuts import render
+import pyodbc
+from django.utils.translation import activate
+
+def traficoLiquidacionMod(request, no_liquidacion=None, id_area=None):
+    # Conexión a la base de datos
+    conn = pyodbc.connect('Driver={sql server};'
+                          'Server=gsvwdb17\sql2014;'
+                          'Database=Pruebas3;'
+                          'UID=gsvreportes;'
+                          'PWD=Ind2019&;'
+                          'Trusted_Connection=no;')
+    cursor = conn.cursor()
+    activate('es')
+
+    # Obtener los parámetros de búsqueda desde la URL
+    no_liquidacion = request.GET.get('no_liquidacion', no_liquidacion)
+    id_area = request.GET.get('id_area', id_area)
+
+    # Consulta SQL base con los parámetros de búsqueda
+    consulta = """
+        SELECT id_area, no_liquidacion, fecha_liquidacion, fecha_ingreso, fecha_ingreso2, no_poliza, id_cheque 
+        FROM dbo.trafico_liquidacion 
+        WHERE YEAR(fecha_liquidacion) = 2024
+    """
+
+    # Agregar condiciones de búsqueda si los parámetros no están vacíos
+    if no_liquidacion and id_area:
+        consulta += f" AND no_liquidacion LIKE '%{no_liquidacion}%' AND id_area = '{id_area}'"
+
+    # Ejecutar la consulta SQL modificada
+    cursor.execute(consulta)
+
+    # Obtener todas las filas de resultados
+    liquidaciones = []
+
+    # Iterar sobre las filas devueltas por la consulta SQL
+    for row in cursor.fetchall():
+        # Crear un diccionario para cada fila y sus atributos
+        liquidaciones.append({
+            "id_area": row[0],
+            "no_liquidacion": row[1],
+            "fecha_liquidacion": row[2],
+            "fecha_ingreso": row[3],
+            "fecha_ingreso2": row[4],
+            "no_poliza": row[5],
+            "id_cheque": row[6]
+        })
+
+    # Cerrar cursor y conexión
+    cursor.close()
+    conn.close()
+
+    # Paginación (si es necesario)
+    paginator = Paginator(liquidaciones, 21)  # 21 elementos mostrados por página
+    page = request.GET.get('page')
+
+    try:
+        liquidaciones_paginadas = paginator.page(page)
+    except PageNotAnInteger:
+        liquidaciones_paginadas = paginator.page(1)
+    except EmptyPage:
+        liquidaciones_paginadas = paginator.page(paginator.num_pages)
+
+    # Renderizar la plantilla con los datos obtenidos y los parámetros de búsqueda
+    return render(request, 'fechasMod.html', {'liquidaciones': liquidaciones_paginadas, 'no_liquidacion': no_liquidacion, 'id_area': id_area})
+
+
+
+from django.utils import timezone
+from datetime import datetime
+
+from django.utils import timezone
+
+def editarFechaLiquidacion(request, no_liquidacion):
+    conn = pyodbc.connect('Driver={sql server};'
+                          'Server=gsvwdb17\sql2014;'
+                          'Database=Pruebas3;'
+                          'UID=gsvreportes;'
+                          'PWD=Ind2019&;'
+                          'Trusted_Connection=no;')
+    cursor = conn.cursor()
+    
+    # Obtener la fecha de liquidación
+    cursor.execute("SELECT fecha_liquidacion FROM dbo.trafico_liquidacion WHERE no_liquidacion = ?", no_liquidacion)
+    row = cursor.fetchone()
+    
+    if row:
+        fecha_liquidacion = row[0]
+    else:
+        raise Http404("Liquidación not found")
+    
+    if request.method == 'POST':
+        # Actualizar la fecha de liquidación con los datos del formulario
+        nueva_fecha_liquidacion_str = request.POST['fecha_liquidacion']
+        nueva_fecha_liquidacion = datetime.strptime(nueva_fecha_liquidacion_str, '%Y-%m-%d').date()
+        
+        # Obtener la fecha actual
+        fecha_actual = datetime.now().date()
+        
+        # Realizar validación de fecha
+        if nueva_fecha_liquidacion > fecha_actual:
+            mensaje_error = "La fecha no puede ser en el futuro."
+            return render(request, 'editar_fecha_liquidacion.html', {'fecha_liquidacion': fecha_liquidacion, 'mensaje_error': mensaje_error})
+        elif nueva_fecha_liquidacion.year < fecha_actual.year:
+            mensaje_error = "La fecha no puede ser de años pasados."
+            return render(request, 'editar_fecha_liquidacion.html', {'fecha_liquidacion': fecha_liquidacion, 'mensaje_error': mensaje_error})
+        
+        # Formatear la nueva fecha como cadena para la consulta SQL
+        nueva_fecha_liquidacion_str = nueva_fecha_liquidacion.strftime('%Y-%m-%d %H:%M:%S')
+        
+        # Ejecutar la consulta de actualización con la fecha formateada como cadena
+        cursor.execute("UPDATE dbo.trafico_liquidacion SET fecha_liquidacion = ? WHERE no_liquidacion = ?", (nueva_fecha_liquidacion_str, no_liquidacion))
+        conn.commit()
+        
+        return redirect('trafico_liquidacion')  # Redirigir a la lista de liquidaciones de tráfico
+    else:
+        return render(request, 'editar_fecha_liquidacion.html', {'form': EditarFechaForm()})
+
+
+
+
+
 
 
 

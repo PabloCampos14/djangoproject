@@ -7,3 +7,6 @@ class ProvForm(forms.Form):
     nombre_proveedor = forms.CharField(max_length=100)
     no_clabe = forms.CharField(max_length=20, required=False)
     descripcion = forms.CharField(max_length=255)
+
+class EditarFechaForm(forms.Form):
+    fecha_liquidacion = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control datepicker'}))
