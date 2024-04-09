@@ -170,68 +170,76 @@ from django.shortcuts import render
 import pyodbc
 from django.utils.translation import activate
 
+import pyodbc
+from django.shortcuts import render
+from django.utils.translation import activate
+
 def traficoLiquidacionMod(request, no_liquidacion=None, id_area=None):
-    # Conexión a la base de datos
-    conn = pyodbc.connect('Driver={sql server};'
-                          'Server=gsvwdb17\sql2014;'
-                          'Database=Pruebas3;'
-                          'UID=gsvreportes;'
-                          'PWD=Ind2019&;'
-                          'Trusted_Connection=no;')
-    cursor = conn.cursor()
-    activate('es')
-
-    # Obtener los parámetros de búsqueda desde la URL
-    no_liquidacion = request.GET.get('no_liquidacion', no_liquidacion)
-    id_area = request.GET.get('id_area', id_area)
-
-    # Consulta SQL base con los parámetros de búsqueda
-    consulta = """
-        SELECT id_area, no_liquidacion, fecha_liquidacion, fecha_ingreso, fecha_ingreso2, no_poliza, id_cheque 
-        FROM dbo.trafico_liquidacion 
-        WHERE YEAR(fecha_liquidacion) = 2024
-    """
-
-    # Agregar condiciones de búsqueda si los parámetros no están vacíos
-    if no_liquidacion and id_area:
-        consulta += f" AND no_liquidacion LIKE '%{no_liquidacion}%' AND id_area = '{id_area}'"
-
-    # Ejecutar la consulta SQL modificada
-    cursor.execute(consulta)
-
-    # Obtener todas las filas de resultados
-    liquidaciones = []
-
-    # Iterar sobre las filas devueltas por la consulta SQL
-    for row in cursor.fetchall():
-        # Crear un diccionario para cada fila y sus atributos
-        liquidaciones.append({
-            "id_area": row[0],
-            "no_liquidacion": row[1],
-            "fecha_liquidacion": row[2],
-            "fecha_ingreso": row[3],
-            "fecha_ingreso2": row[4],
-            "no_poliza": row[5],
-            "id_cheque": row[6]
-        })
-
-    # Cerrar cursor y conexión
-    cursor.close()
-    conn.close()
-
-    # Paginación (si es necesario)
-    paginator = Paginator(liquidaciones, 21)  # 21 elementos mostrados por página
-    page = request.GET.get('page')
-
     try:
-        liquidaciones_paginadas = paginator.page(page)
-    except PageNotAnInteger:
-        liquidaciones_paginadas = paginator.page(1)
-    except EmptyPage:
-        liquidaciones_paginadas = paginator.page(paginator.num_pages)
+        conn = pyodbc.connect('Driver={sql server};'
+                              'Server=gsvwdb17\sql2014;'
+                              'Database=Pruebas3;'
+                              'UID=gsvreportes;'
+                              'PWD=Ind2019&;'
+                              'Trusted_Connection=no;')
+        cursor = conn.cursor()
+        activate('es')
 
-    # Renderizar la plantilla con los datos obtenidos y los parámetros de búsqueda
-    return render(request, 'fechasMod.html', {'liquidaciones': liquidaciones_paginadas, 'no_liquidacion': no_liquidacion, 'id_area': id_area})
+        # Obtener los parámetros de búsqueda desde la URL
+        no_liquidacion = request.GET.get('no_liquidacion', no_liquidacion)
+        id_area = request.GET.get('id_area', id_area)
+
+        # Consulta SQL base sin la condición de año específico
+        consulta = """
+            SELECT id_area, no_liquidacion, fecha_liquidacion, fecha_ingreso, fecha_ingreso2, no_poliza, id_cheque 
+            FROM dbo.trafico_liquidacion
+        """
+
+        # Lista para almacenar resultados
+        liquidaciones = []
+
+        # Verificar si se proporcionaron parámetros de búsqueda válidos
+        if no_liquidacion or id_area:
+            # Construir la condición de búsqueda dinámica
+            condiciones = []
+            if no_liquidacion:
+                condiciones.append(f"no_liquidacion = '{no_liquidacion}'")
+            if id_area:
+                condiciones.append(f"id_area = '{id_area}'")
+
+            # Combinar condiciones en la consulta final si existen
+            if condiciones:
+                consulta += " WHERE " + " AND ".join(condiciones)
+
+            # Ejecutar la consulta SQL modificada
+            cursor.execute(consulta)
+
+            # Obtener todas las filas de resultados
+            for row in cursor.fetchall():
+                # Crear un diccionario para cada fila y sus atributos
+                liquidaciones.append({
+                    "id_area": row[0],
+                    "no_liquidacion": row[1],
+                    "fecha_liquidacion": row[2],
+                    "fecha_ingreso": row[3],    
+                    "fecha_ingreso2": row[4],
+                    "no_poliza": row[5],
+                    "id_cheque": row[6]
+                })
+
+        # Cerrar cursor y conexión
+        cursor.close()
+        conn.close()
+
+        # Renderizar la plantilla con los datos obtenidos y los parámetros de búsqueda
+        return render(request, 'fechasMod.html', {'liquidaciones': liquidaciones, 'no_liquidacion': no_liquidacion, 'id_area': id_area})
+
+    except Exception as e:
+        # Manejo de excepciones: registrar el error y devolver una respuesta apropiada
+        print(f"Error en la consulta: {e}")
+        return render(request, 'fechasMod.html', {'error_message': 'Ocurrió un error al procesar la consulta.'})
+
+
 
 
 
@@ -265,17 +273,15 @@ def editarFechaLiquidacion(request, no_liquidacion):
         
         # Obtener la fecha actual
         fecha_actual = datetime.now().date()
-        
-        # Realizar validación de fecha
-        if nueva_fecha_liquidacion > fecha_actual:
-            mensaje_error = "La fecha no puede ser en el futuro."
+
+# Validar que la nueva fecha pertenezca al mes y año actual
+        if nueva_fecha_liquidacion.year != fecha_actual.year or nueva_fecha_liquidacion.month != fecha_actual.month:
+            mensaje_error = "La fecha debe ser del mes y año actual."
             return render(request, 'editar_fecha_liquidacion.html', {'fecha_liquidacion': fecha_liquidacion, 'mensaje_error': mensaje_error})
-        elif nueva_fecha_liquidacion.year < fecha_actual.year:
-            mensaje_error = "La fecha no puede ser de años pasados."
-            return render(request, 'editar_fecha_liquidacion.html', {'fecha_liquidacion': fecha_liquidacion, 'mensaje_error': mensaje_error})
-        
-        # Formatear la nueva fecha como cadena para la consulta SQL
+
+# Formatear la nueva fecha como cadena para la consulta SQL
         nueva_fecha_liquidacion_str = nueva_fecha_liquidacion.strftime('%Y-%m-%d %H:%M:%S')
+
         
         # Ejecutar la consulta de actualización con la fecha formateada como cadena
         cursor.execute("UPDATE dbo.trafico_liquidacion SET fecha_liquidacion = ? WHERE no_liquidacion = ?", (nueva_fecha_liquidacion_str, no_liquidacion))

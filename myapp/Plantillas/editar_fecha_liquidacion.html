@@ -17,24 +17,24 @@
             <span class="display-4">Regresar</span>
         </a>
     </nav>
-    <h1>Editar Fecha de Liquidación</h1>
-    
-    <!-- Script para mostrar mensaje de error en ventana emergente -->
-    {% if mensaje_error %}
-    <script>
-        // Mostrar mensaje de error en una ventana emergente
-        alert("{{ mensaje_error }}");
-    </script>
-    {% endif %}
-
-    <form id="editarFechaForm" method="post" onsubmit="return validarFecha()">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="id_fecha_liquidacion">Fecha de Liquidación:</label>
-            {{ form.fecha_liquidacion }}
+    <div class="container mt-5">
+        <h1>Editar Fecha de Liquidación</h1>
+        
+        {% if mensaje_error %}
+        <div class="alert alert-danger" role="alert">
+            {{ mensaje_error }}
         </div>
-        <button type="submit" class="btn btn-primary">Guardar</button>
-    </form>
+        {% endif %}
+
+        <form id="editarFechaForm" method="post" onsubmit="return validarFecha()">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_fecha_liquidacion">Nueva Fecha de Liquidación:</label>
+                {{ form.fecha_liquidacion }}
+            </div>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+        </form>
+    </div>
     
     <!-- Importa los scripts de Bootstrap y del widget de calendario -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
@@ -44,7 +44,7 @@
     <!-- Inicializa el widget de calendario -->
     <script>
         $(document).ready(function() {
-            $('.datepicker').datepicker({
+            $('#id_fecha_liquidacion').datepicker({
                 format: 'yyyy-mm-dd',
                 autoclose: true,
                 todayHighlight: true
@@ -52,26 +52,18 @@
         });
 
         function validarFecha() {
-            // Obtener el valor de la fecha ingresada
             var nuevaFechaStr = document.getElementById("id_fecha_liquidacion").value;
             var nuevaFecha = new Date(nuevaFechaStr);
             var fechaActual = new Date();
 
-            // Validar la fecha
-            if (nuevaFecha > fechaActual) {
-                alert("La fecha no puede ser en el futuro.");
-                return false; // Evita que se envíe el formulario
-            } else if (nuevaFecha.getFullYear() < fechaActual.getFullYear()) {
-                alert("La fecha no puede ser de años pasados.");
-                return false; // Evita que se envíe el formulario
+            // Validar que la nueva fecha pertenezca al mes y año actual
+            if (nuevaFecha.getFullYear() !== fechaActual.getFullYear() || nuevaFecha.getMonth() !== fechaActual.getMonth()) {
+                alert("La fecha debe ser del mes y año actual.");
+                return false;
             }
 
             // Preguntar al usuario si está seguro de guardar los cambios
-            if (confirm("¿Está seguro de guardar los cambios?")) {
-                return true; // Se envía el formulario si se confirma
-            } else {
-                return false; // Evita que se envíe el formulario si se cancela
-            }
+            return confirm("¿Está seguro de guardar los cambios?");
         }
     </script>
 </body>

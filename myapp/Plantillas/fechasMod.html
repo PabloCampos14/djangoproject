@@ -6,120 +6,188 @@
     <meta name="theme-color" content="#319197">
     <title>Liquidaciones de tráfico</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link rel="icon" href="../static/favicon.ico">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        /* Estilos para el sidebar */
+        .sidenav {
+            height: 110%;
+            width: 160px;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: -180px; /* Inicia oculto */
+            background-color: #e84a25;
+            overflow-x: hidden;
+            padding-top: 20px;
+            transition: 0.3s;
+        }
+        .sidenav a {
+            padding: 6px 8px 6px 16px;
+            text-decoration: none;
+            font-size: 25px;
+            color: #000000;
+            display: block;
+        }
+        .sidenav a:hover {
+            color: #f1f1f1;
+        }
+        .main-content { /* Ni le muevas papito que se me mueve todo el show */
+            transition: margin-left 0.3s;
+            padding: 20px;
+        }
+        @media screen and (max-height: 450px) {
+            .sidenav { padding-top: 15px; }
+            .sidenav a { font-size: 18px; }
+        }
+
+        /* Estilo adicional para el botón de hamburguesa */
+        .navbar-toggler {
+            order: -1; /* Cambiar el orden para que aparezca primero en el layout */
+            margin-right: 0; /* Eliminar margen derecho para posicionar a la izquierda */
+        }
+    </style>
 </head>
 <body>
+    <!-- Sidebar -->
+    <div class="sidenav" id="sidebar">
+        <a href="http://127.0.0.1:8000/">Reclasificador</a>
+        <a href="#services">Services</a>
+        <a href="#clients">Clients</a>
+        <a href="#contact">Contact</a>
+    </div>
+
+    <!-- Contenido principal -->
     <div class="main-content" id="main-content">
-        <!-- Contenido principal aquí -->
-        <nav class="navbar navbar-light bg-light" style="margin-left: 80px;">
-            <a class="navbar-brand" href="http://127.0.0.1:8000/trafico-liquidacion/">
+        <!-- Barra de navegación -->
+        <nav class="navbar navbar-light bg-light">
+            <!-- Botón de toggle para el sidebar -->
+            <button class="navbar-toggler" type="button" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+            <a class="navbar-brand" href="#">
                 <img src="https://www.gruposantanavega.com/img/logo_ft_002.png" width="150" height="60" class="d-inline-block align-top" alt="">
                 <span class="display-4">Fechas</span>
             </a>
         </nav>
 
-        <!-- Formulario de búsqueda -->
-        <form method="get" action="{% url 'trafico_liquidacion' %}" class="form-inline" style="margin-left: 80px;">
-            <input type="text" name="no_liquidacion" placeholder="Número de liquidación..." class="form-control mr-sm-2">
-            <select name="id_area" class="form-control mr-sm-2">
-                <option value="">Seleccionar área...</option>
-                <option value="0">SIN ASIGNAR</option>
-                <option value="1">Altamira</option>
-                <option value="2">Tula</option>
-                <option value="3">ProgrsoCamp</option>
-                <option value="4">Corporativo</option>
-                <option value="5">Cadereyta</option>
-                <option value="6">Coatza</option>
-                <option value="7">Otros</option>
-                <option value="8">Irapuato</option>
-                <option value="9">Veracruz</option>
-                <option value="10">Incorporacion</option>
-                <option value="11">Matamoros</option>
-                <option value="12">Rosarito</option>
-                <option value="13">Tuxpan</option>
-                
-            </select>
-            <button type="submit" class="btn btn-outline-success my-2 my-sm-0">Buscar</button>
-        </form>       
+        <!-- Contenido principal -->
+        <div>
+            <!-- Formulario de búsqueda -->
+            <form method="get" action="{% url 'trafico_liquidacion' %}" class="form-inline" style="margin-top: 20px;">
+                <input type="text" name="no_liquidacion" placeholder="Número de liquidación..." class="form-control mr-sm-2">
+                <select name="id_area" class="form-control mr-sm-2">
+                    <option value="">Seleccionar área...</option>
+                    <option value="0">SIN ASIGNAR</option>
+                    <option value="1">Altamira</option>
+                    <option value="2">Tula</option>
+                    <option value="3">ProgrsoCamp</option>
+                    <option value="4">Corporativo</option>
+                    <option value="5">Cadereyta</option>
+                    <option value="6">Coatza</option>
+                    <option value="7">Otros</option>
+                    <option value="8">Irapuato</option>
+                    <option value="9">Veracruz</option>
+                    <option value="10">Incorporacion</option>
+                    <option value="11">Matamoros</option>
+                    <option value="12">Rosarito</option>
+                    <option value="13">Tuxpan</option>
+                </select>
+                <button type="submit" class="btn btn-outline-success my-2 my-sm-0">Buscar</button>
+            </form>
 
-        <!-- Tabla de liquidaciones de tráfico -->
-        <table class="table table-striped">
-            <thead class="thead-dark">
-                <tr>
-                    <th scope="col">ID Area</th>
-                    <th scope="col">Numero Liquidacion</th>
-                    <th scope="col">Fecha de Liquidación</th>
-                    <th scope="col">Fecha de Ingreso</th>
-                    <th scope="col">Fecha de Ingreso 2</th>
-                    <th scope="col">Número de Póliza</th>
-                    <th scope="col">ID del Cheque</th>
-                    <th scope="col">Editar Fecha</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for liquidacion in liquidaciones %}
-                <tr>
-                    <td>{{ liquidacion.id_area }}</td>
-                    <td>{{ liquidacion.no_liquidacion }}</td>
-                    <td>{{ liquidacion.fecha_liquidacion|date:"Y \- F \- d - H:i:s" }}</td>
-                    <td>{{ liquidacion.fecha_ingreso|date:"Y \- F \- d - H:i:s" }}</td>
-                    <td>{{ liquidacion.fecha_ingreso2|date:"Y \- F \- d - H:i:s" }}</td>
-                    <td>{{ liquidacion.no_poliza }}</td>
-                    <td>{{ liquidacion.id_cheque }}</td>
-                    <td>
-                        <a href="{% url 'editar_fecha_liquidacion' no_liquidacion=liquidacion.no_liquidacion %}" class="btn btn-success">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"></path>
-                                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"></path>
-                            </svg> Edit
-                        </a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        
-        <!-- Paginación (si es necesario) -->
-        {% if liquidaciones.has_other_pages %}
-            <nav aria-label="Page navigation">
+            <!-- Tabla de liquidaciones de tráfico -->
+            {% if liquidaciones %}
+            <table class="table table-striped" style="margin-top: 20px;">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">ID Área</th>
+                        <th scope="col">Número Liquidación</th>
+                        <th scope="col">Fecha de Liquidación</th>
+                        <th scope="col">Fecha de Ingreso</th>
+                        <th scope="col">Fecha de Ingreso 2</th>
+                        <th scope="col">Número de Póliza</th>
+                        <th scope="col">ID del Cheque</th>
+                        <th scope="col">Editar Fecha</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for liquidacion in liquidaciones %}
+                    <tr>
+                        <td>{{ liquidacion.id_area }}</td>
+                        <td>{{ liquidacion.no_liquidacion }}</td>
+                        <td>{{ liquidacion.fecha_liquidacion|date:"Y \- F \- d - H:i:s" }}</td>
+                        <td>{{ liquidacion.fecha_ingreso|date:"Y \- F \- d - H:i:s" }}</td>
+                        <td>{{ liquidacion.fecha_ingreso2|date:"Y \- F \- d - H:i:s" }}</td>
+                        <td>{{ liquidacion.no_poliza }}</td>
+                        <td>{{ liquidacion.id_cheque }}</td>
+                        <td>
+                            <a href="{% url 'editar_fecha_liquidacion' no_liquidacion=liquidacion.no_liquidacion %}" class="btn btn-success">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"></path>
+                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"></path>
+                                </svg> Edit
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p>No hay resultados para mostrar.</p>
+            <table class="table table-striped" style="margin-top: 20px;">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">ID Área</th>
+                        <th scope="col">Número Liquidación</th>
+                        <th scope="col">Fecha de Liquidación</th>
+                        <th scope="col">Fecha de Ingreso</th>
+                        <th scope="col">Fecha de Ingreso 2</th>
+                        <th scope="col">Número de Póliza</th>
+                        <th scope="col">ID del Cheque</th>
+                        <th scope="col">Editar Fecha</th>
+                    </tr>
+                </thead>
+            </table>
+            {% endif %}
+
+            <!-- Paginación (si es necesario) -->
+            {% if liquidaciones.has_other_pages %}
+            <nav aria-label="Page navigation" style="margin-top: 20px;">
                 <ul class="pagination justify-content-center">
                     {% if liquidaciones.has_previous %}
-                        <li class="page-item"><a class="page-link" href="?page=1">&laquo; Primera</a></li>
-                        <li class="page-item"><a class="page-link" href="?page={{ liquidaciones.previous_page_number }}">Anterior</a></li>
+                    <li class="page-item"><a class="page-link" href="?page=1">&laquo; Primera</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ liquidaciones.previous_page_number }}">Anterior</a></li>
                     {% endif %}
                     <li class="page-item active" aria-current="page">
                         <span class="page-link">Página {{ liquidaciones.number }} de {{ liquidaciones.paginator.num_pages }}</span>
                     </li>
                     {% if liquidaciones.has_next %}
-                        <li class="page-item"><a class="page-link" href="?page={{ liquidaciones.next_page_number }}">Siguiente</a></li>
-                        <li class="page-item"><a class="page-link" href="?page={{ liquidaciones.paginator.num_pages }}">Última &raquo;</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ liquidaciones.next_page_number }}">Siguiente</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ liquidaciones.paginator.num_pages }}">Última &raquo;</a></li>
                     {% endif %}
                 </ul>
             </nav>
-        {% endif %}
+            {% endif %}
+        </div>
     </div>
 
-    <!-- Script para controlar el comportamiento de la barra lateral -->
+    <!-- Script para controlar el comportamiento del sidebar -->
     <script>
         function toggleSidebar() {
             var sidebar = document.getElementById("sidebar");
             var mainContent = document.getElementById("main-content");
-            var toggleBtn = document.querySelector(".toggle-btn");
-            
-            // Obtiene el valor actual de la propiedad left de la barra lateral
+
+            // Obtiene el valor actual de la propiedad left del sidebar
             var sidebarLeft = window.getComputedStyle(sidebar).getPropertyValue("left");
-            
-            if (sidebarLeft === "-250px") {
+
+            if (sidebarLeft === "-160px") {
+                // Mostrar el sidebar
                 sidebar.style.left = "0";
-                mainContent.style.marginLeft = "250px";
-                mainContent.style.width = "calc(100% - 250px)";
-                toggleBtn.style.left = "230px"; // Ajusta la posición del botón
+                mainContent.style.marginLeft = "160px";
             } else {
-                sidebar.style.left = "-250px";
+                // Ocultar el sidebar
+                sidebar.style.left = "-160px";
                 mainContent.style.marginLeft = "0";
-                mainContent.style.width = "100%";
-                toggleBtn.style.left = "30px"; // Ajusta la posición del botón
             }
         }
     </script>

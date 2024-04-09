@@ -10,92 +10,98 @@
     <link rel="icon" href="../static/favicon.ico">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-  
     <!-- Estilos adicionales -->
     <style>
-      /* Estilos para el botón de alternar barra lateral */
-.toggle-btn {
-  position: absolute;
-  left: 0;
-  top: 20px;
-  cursor: pointer;
-  transition: left 0.3s;
-  z-index: 1;
-}
+        /* Estilos para el nuevo sidebar */
+        .sidenav {
+            height: 100%;
+            width: 250px;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: -250px;
+            background-color: #e84a25;
+            overflow-x: hidden;
+            padding-top: 20px;
+            transition: 0.3s;
+        }
 
-/* Estilos para la barra lateral cuando la página se carga inicialmente */
-.initial-toggle {
-  left: 250px;
-}
+        .sidenav a {
+            padding: 6px 8px 6px 16px;
+            text-decoration: none;
+            font-size: 25px;
+            color: #000000;
+            display: block;
+        }
 
-/* Estilos para la barra lateral */
-.sidebar {
-  height: 100%;
-  width: 250px;
-  position: fixed;
-  top: 0;
-  left: -250px;
-  background-color: #e84a25;
-  transition: left 0.3s;
-  padding-top: 20px;
-}
+        .sidenav a:hover {
+            color: #f1f1f1;
+        }
 
-/* Contenido principal */
-.main-content {
-  margin-left: 0;
-  padding: 20px;
-  transition: margin-left 0.3s;
-  width: calc(100% - 250px);
-  margin-left: 250px;
-}
+        .main-content { /* Ni le muevas papito que se me mueve todo el show */
+            transition: margin-left 0.3s;
+            padding: 20px;
+        }
 
+        /* Estilos adicionales para el botón de alternar sidebar */
+        .toggle-btn {
+            position: absolute;
+            left: 0;
+            top: 20px;
+            cursor: pointer;
+            transition: left 0.3s;
+            z-index: 1;
+        }
 
-
-
-      /* Estilo para la tabla */
-      table {
-        margin-top: 80px; /* Ajusta el margen superior para dejar espacio para la barra lateral */
-      }
+        /* Estilo adicional para el botón de hamburguesa */
+        .navbar-toggler {
+            order: -1; /* Cambiar el orden para que aparezca primero en el layout */
+            margin-right: 0; /* Eliminar margen derecho para posicionar a la izquierda */
+        }
     </style>
-      
-  </head>
+</head>
 <body>
-    <div class="sidebar" id="sidebar">
-        <!-- Aquí puedes colocar enlaces, menús, o cualquier contenido que desees en la barra lateral -->
-        <h2>Menú</h2>
-        <ul>
-          <li><a href="http://127.0.0.1:8000/trafico-liquidacion/">Trafico</a></li>
-          <li><a href="#">Opción 2</a></li>
-          <li><a href="#">Opción 3</a></li>
-        </ul>
-      </div>
+    <!-- Nuevo Sidebar -->
+    <div class="sidenav" id="sidebar">
+        <a href="http://127.0.0.1:8000/trafico-liquidacion/">Trafico</a>
+        <a href="#">Opción 2</a>
+        <a href="#">Opción 3</a>
+    </div>
+
+    <!-- Contenido principal -->
     <div class="main-content" id="main-content">
-      <!-- Contenido principal aquí -->
-      <nav class="navbar navbar-light bg-light" style="margin-left: 80px;">
-        <a class="navbar-brand" href="http://127.0.0.1:8000/">
-            <img src="https://www.gruposantanavega.com/img/logo_ft_002.png" width="150" height="60" class="d-inline-block align-top" alt="">
-            <span class="display-4">Reclasificador</span>
-        </a>
-    </nav>
-    
-    <form method="get" action="{% url 'get_proveedores_list' %}" class="form-inline" style="margin-left: 80px;">
-        <input type="text" name="search_query" value="{{ search_query|default_if_none:'' }}" placeholder="Buscar..." class="form-control mr-sm-2">
-        <button type="submit" class="btn btn-outline-success my-2 my-sm-0">Buscar</button>
-    </form>
-    
-      <table class="table table-striped">
-        <thead class="thead-dark">
-            <tr>
-                <th scope="col">ID Proveedor</th>
-                <th scope="col">Número Proveedor</th>
-                <th scope="col">Nombre Proveedor</th>
-                <th scope="col">Num Clabe</th>
-                <th scope="col">Descripción</th>
-                <th scope="col">Modificacion</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for proveedor in proveedores %}
+        <!-- Barra de navegación -->
+        <nav class="navbar navbar-light bg-light" style="margin-left: 80px;">
+            <!-- Botón de toggle para el sidebar -->
+            <button class="navbar-toggler" type="button" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+            <a class="navbar-brand" href="http://127.0.0.1:8000/">
+                <img src="https://www.gruposantanavega.com/img/logo_ft_002.png" width="150" height="60" class="d-inline-block align-top" alt="">
+                <span class="display-4">Reclasificador</span>
+            </a>
+        </nav>
+
+        <!-- Formulario de búsqueda -->
+        <form method="get" action="{% url 'get_proveedores_list' %}" class="form-inline" style="margin-left: 80px; margin-top: 20px;">
+            <input type="text" name="search_query" value="{{ search_query|default_if_none:'' }}" placeholder="Buscar..." class="form-control mr-sm-2">
+            <button type="submit" class="btn btn-outline-success my-2 my-sm-0">Buscar</button>
+        </form>
+
+        <!-- Tabla de proveedores -->
+        <table class="table table-striped" style="margin-top: 20px;">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">ID Proveedor</th>
+                    <th scope="col">Número Proveedor</th>
+                    <th scope="col">Nombre Proveedor</th>
+                    <th scope="col">Num Clabe</th>
+                    <th scope="col">Descripción</th>
+                    <th scope="col">Modificación</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for proveedor in proveedores %}
                 <tr>
                     <td>{{ proveedor.id_proveedor }}</td>
                     <td>{{ proveedor.num_proveedor }}</td>
@@ -111,64 +117,53 @@
                         </a>
                     </td>
                 </tr>
-            {% endfor %}
-        </tbody>
-        
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Paginación -->
         {% if proveedores.has_other_pages %}
-    
-        <nav aria-label="Page navigation">
+        <nav aria-label="Page navigation" style="margin-top: 20px;">
             <ul class="pagination justify-content-center">
                 {% if proveedores.has_previous %}
-                    <li class="page-item"><a class="page-link" href="?page=1">&laquo; Primera</a></li>
-                    <li class="page-item"><a class="page-link" href="?page={{ proveedores.previous_page_number }}">Anterior</a></li>
+                <li class="page-item"><a class="page-link" href="?page=1">&laquo; Primera</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ proveedores.previous_page_number }}">Anterior</a></li>
                 {% endif %}
-        
                 <li class="page-item active" aria-current="page">
-                    <span class="page-link">Pagina {{ proveedores.number }} de {{ proveedores.paginator.num_pages }}</span>
+                    <span class="page-link">Página {{ proveedores.number }} de {{ proveedores.paginator.num_pages }}</span>
                 </li>
-        
                 {% if proveedores.has_next %}
-                    <li class="page-item"><a class="page-link" href="?page={{ proveedores.next_page_number }}">Siguiente</a></li>
-                    <li class="page-item"><a class="page-link" href="?page={{ proveedores.paginator.num_pages }}">Ultima &raquo;</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ proveedores.next_page_number }}">Siguiente</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ proveedores.paginator.num_pages }}">Última &raquo;</a></li>
                 {% endif %}
             </ul>
         </nav>
-    
-        
         {% endif %}
-    </table>
-    </div>        
-
-    <!-- Botón para alternar la visibilidad de la barra lateral -->
-    <div class="toggle-btn initial-toggle" onclick="toggleSidebar()">
-        <i class="fas fa-bars fa-lg"></i>
     </div>
-    
 
-    <!-- Script para controlar el comportamiento de la barra lateral -->
-<!-- Script para controlar el comportamiento de la barra lateral -->
-<script>
-    function toggleSidebar() {
-      var sidebar = document.getElementById("sidebar");
-      var mainContent = document.getElementById("main-content");
-      var toggleBtn = document.querySelector(".toggle-btn");
-      
-      // Obtiene el valor actual de la propiedad left de la barra lateral
-      var sidebarLeft = window.getComputedStyle(sidebar).getPropertyValue("left");
-      
-      if (sidebarLeft === "-250px") {
-        sidebar.style.left = "0";
-        mainContent.style.marginLeft = "250px";
-        mainContent.style.width = "calc(100% - 250px)";
-        toggleBtn.style.left = "230px"; // Ajusta la posición del botón
-      } else {
-        sidebar.style.left = "-250px";
-        mainContent.style.marginLeft = "0";
-        mainContent.style.width = "100%";
-        toggleBtn.style.left = "30px"; // Ajusta la posición del botón
-      }
-    }
-  </script>
-  
+    <!-- Script para controlar el comportamiento del sidebar -->
+    <script>
+        function toggleSidebar() {
+            var sidebar = document.getElementById("sidebar");
+            var mainContent = document.getElementById("main-content");
+            var toggleBtn = document.querySelector(".toggle-btn");
+
+            // Obtiene el valor actual de la propiedad left del sidebar
+            var sidebarLeft = window.getComputedStyle(sidebar).getPropertyValue("left");
+
+            if (sidebarLeft === "-250px") {
+                sidebar.style.left = "0";
+                mainContent.style.marginLeft = "250px";
+                mainContent.style.width = "calc(100% - 250px)";
+                toggleBtn.style.left = "230px";
+            } else {
+                sidebar.style.left = "-250px";
+                mainContent.style.marginLeft = "0";
+                mainContent.style.width = "100%";
+                toggleBtn.style.left = "30px";
+            }
+        }
+    </script>
+
 </body>
 </html>

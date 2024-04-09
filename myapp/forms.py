@@ -9,4 +9,6 @@ class ProvForm(forms.Form):
     descripcion = forms.CharField(max_length=255)
 
 class EditarFechaForm(forms.Form):
-    fecha_liquidacion = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control datepicker'}))
+    fecha_liquidacion = forms.DateField(
+        widget=forms.TextInput(attrs={'class': 'form-control datepicker', 'placeholder': 'YYYY-MM-DD'})
+    )
