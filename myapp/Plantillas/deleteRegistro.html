@@ -60,9 +60,9 @@
     <!-- Sidebar -->
     <div class="sidenav" id="sidebar">
         <a href="http://127.0.0.1:8000/">Reclasificador</a>
-       <!--<a href="#services">Services</a>
+        <a href="#services">Services</a>
         <a href="#clients">Clients</a>
-        <a href="#contact">Contact</a> --> 
+        <a href="#contact">Contact</a>
     </div>
 
     <!-- Contenido principal -->
@@ -74,7 +74,7 @@
                 <i class="fas fa-bars"></i>
             </button>
             <a class="navbar-brand" href="#">
-                <img src="https://www.gruposantanavega.com/img/logo_ft_002.png" width="150" height="60" class="d-inline-block align-top" alt="" href="http://127.0.0.1:8000/trafico-liquidacion/">
+                <img src="https://www.gruposantanavega.com/img/logo_ft_002.png" width="150" height="60" class="d-inline-block align-top" alt="">
                 <span class="display-4">Fechas</span>
             </a>
         </nav>
@@ -83,7 +83,7 @@
         <div>
             <!-- Formulario de búsqueda -->
             <form method="get" action="{% url 'trafico_liquidacion' %}" class="form-inline" style="margin-top: 20px;">
-                <input type="text" name="no_liquidacion" placeholder="Número de liquidación..." class="form-control mr-sm-2" autocomplete="off">
+                <input type="text" name="no_liquidacion" placeholder="Número de liquidación..." class="form-control mr-sm-2">
                 <select name="id_area" class="form-control mr-sm-2">
                     <option value="">Seleccionar área...</option>
                     <option value="0">SIN ASIGNAR</option>
@@ -130,12 +130,12 @@
                         <td>{{ liquidacion.no_poliza }}</td>
                         <td>{{ liquidacion.id_cheque }}</td>
                         <td>
-                            <a href="{% url 'editar_fecha_liquidacion' no_liquidacion=liquidacion.no_liquidacion id_area=liquidacion.id_area %}" class="btn btn-success">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"></path>
-                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"></path>
-                                </svg> Edit
-                            </a>
+                            <form method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="no_liquidacion" value="{{ liquidacion.no_liquidacion }}">
+                                <input type="hidden" name="id_area" value="{{ liquidacion.id_area }}">
+                                <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                            </form>
                         </td>
                     </tr>
                     {% endfor %}

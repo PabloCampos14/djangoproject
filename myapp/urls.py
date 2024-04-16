@@ -12,6 +12,9 @@ urlpatterns = [
     #NUEVAS
     path('trafico-liquidacion/', views.traficoLiquidacionMod, name='trafico_liquidacion'),  # Nueva URL para la vista traficoLiquidacionMod
     #path('editar_fecha_liquidacion/<int:id_liquidacion>/', views.editarFechaLiquidacion, name='editar_fecha_liquidacion'),
-    path('editar_fecha_liquidacion/<int:no_liquidacion>/', views.editarFechaLiquidacion, name='editar_fecha_liquidacion'),
+    path('editar_fecha_liquidacion/<int:no_liquidacion>/<str:id_area>/', views.editarFechaLiquidacion, name='editar_fecha_liquidacion'),
     path('trafico-liquidacion/<str:no_liquidacion>/<str:id_area>/', views.traficoLiquidacionMod, name='trafico_liquidacion_search'),
+    #path('eliminar-liquidacion/', views.eliminar_liquidacion, name='eliminar_liquidacion'),
+
+
 ]
