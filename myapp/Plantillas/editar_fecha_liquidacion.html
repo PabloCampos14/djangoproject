@@ -22,19 +22,54 @@
                 {% csrf_token %}
                 <label for="fecha_liquidacion">Nueva Fecha de Liquidación:</label>
                 <input type="date" id="fecha_liquidacion" name="fecha_liquidacion" value="{{ fecha_liquidacion|date:'Y-m-d' }}">
-                <button type="submit" class="btn btn-primary">Guardar</button>
+                <button type="button" class="btn btn-primary" onclick="confirmarGuardado()">Guardar</button>
+                <a href="{% url 'trafico_liquidacion' %}" class="btn btn-danger">Cancelar</a>
+                
+                {% if mensaje_error %}
+                <div class="alert alert-danger mt-3" role="alert">
+                    {{ mensaje_error }}
+                </div>
+                {% endif %}
             </form>
-
-            {% if mensaje_error %}
-            <div class="alert alert-danger mt-3" role="alert">
-                {{ mensaje_error }}
-            </div>
-            {% endif %}
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <!-- Modal de Confirmación -->
+    <div class="modal fade" id="confirmacionModal" tabindex="-1" role="dialog" aria-labelledby="confirmacionModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmacionModalLabel">Confirmar Guardado</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    ¿Estás seguro de que deseas guardar los cambios?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" onclick="guardarCambios()">Guardar Cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+        
+
+        // Función para mostrar modal de confirmación
+        function confirmarGuardado() {
+            $('#confirmacionModal').modal('show');
+        }
+
+        // Función para enviar el formulario después de la confirmación
+        function guardarCambios() {
+            // Aquí podrías agregar lógica adicional antes de enviar el formulario si es necesario
+            document.querySelector('form').submit();
+        }
+    </script>
 </body>
 </html>

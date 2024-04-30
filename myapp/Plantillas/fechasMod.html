@@ -59,7 +59,7 @@
 <body>
     <!-- Sidebar -->
     <div class="sidenav" id="sidebar">
-        <a href="http://127.0.0.1:8000/">Reclasificador</a>
+        <a href="{% url 'get_proveedores_list' %}">Reclasificador</a>
        <!--<a href="#services">Services</a>
         <a href="#clients">Clients</a>
         <a href="#contact">Contact</a> --> 
@@ -74,7 +74,7 @@
                 <i class="fas fa-bars"></i>
             </button>
             <a class="navbar-brand" href="#">
-                <img src="https://www.gruposantanavega.com/img/logo_ft_002.png" width="150" height="60" class="d-inline-block align-top" alt="" href="http://127.0.0.1:8000/trafico-liquidacion/">
+                <img src="https://www.gruposantanavega.com/img/logo_ft_002.png" width="150" height="60" class="d-inline-block align-top" alt="" href="{% url 'trafico_liquidacion' %}">
                 <span class="display-4">Fechas</span>
             </a>
         </nav>

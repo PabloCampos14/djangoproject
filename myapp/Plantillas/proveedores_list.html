@@ -58,12 +58,17 @@
             order: -1; /* Cambiar el orden para que aparezca primero en el layout */
             margin-right: 0; /* Eliminar margen derecho para posicionar a la izquierda */
         }
+
+        
+
+
     </style>
 </head>
 <body>
+    
     <!-- Nuevo Sidebar -->
     <div class="sidenav" id="sidebar">
-        <a href="http://127.0.0.1:8000/trafico-liquidacion/">Trafico</a>
+        <a href="{% url 'trafico_liquidacion' %}">Trafico</a>
       <!--  <a href="#">Opción 2</a>
         <a href="#">Opción 3</a>  --> 
     </div>
@@ -76,7 +81,7 @@
             <button class="navbar-toggler" type="button" onclick="toggleSidebar()">
                 <i class="fas fa-bars"></i>
             </button>
-            <a class="navbar-brand" href="http://127.0.0.1:8000/">
+            <a class="navbar-brand" href="{% url 'get_proveedores_list' %}">
                 <img src="https://www.gruposantanavega.com/img/logo_ft_002.png" width="150" height="60" class="d-inline-block align-top" alt="">
                 <span class="display-4">Reclasificador</span>
             </a>

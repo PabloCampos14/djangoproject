@@ -6,8 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.translation import activate
 from datetime import datetime
 import pyodbc
-
-
+from django.contrib.auth import authenticate, login
 def connected():
     """
     Función para establecer una conexión con la base de datos y ejecutar una consulta de ejemplo.
@@ -277,3 +276,5 @@ def editarFechaLiquidacion(request, no_liquidacion, id_area):
     except Exception as e:
         print(f"Error en la consulta: {e}")
         return render(request, 'editar_fecha_liquidacion.html', {'error_message': 'Ocurrió un error al procesar la consulta.'})
+
+

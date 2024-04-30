@@ -1,5 +1,6 @@
 #myapp/urls.py
-from django.urls import path
+from django.urls import path, include
+from django.contrib.auth import views as auth_views
 from . import views 
 
 urlpatterns = [
@@ -16,5 +17,8 @@ urlpatterns = [
     path('trafico-liquidacion/<str:no_liquidacion>/<str:id_area>/', views.traficoLiquidacionMod, name='trafico_liquidacion_search'),
     #path('eliminar-liquidacion/', views.eliminar_liquidacion, name='eliminar_liquidacion'),
 
+    
+
+   
 
 ]
